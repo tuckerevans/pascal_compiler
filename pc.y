@@ -4,6 +4,11 @@
 #include "y.tab.h"
 #include "sem_check.h"
 
+/*
+TODO:
+- Add checkid() to counter mkid()
+*/
+
 %}
 
 %union {
@@ -46,7 +51,7 @@
 %token WHILE DO
 
 %token FCALL PCALL
-%token ACCESS
+%token ARRAY_ACCESS
 
 %token LIST
 
@@ -65,15 +70,20 @@ program
 id_list
 	:ID
 	{
+		$$ = mkid($1);
 	}
 	|id_list ',' ID
 	{
+		$$ = mktree(LIST, $1, mkid($3));
 	}
 ;
 
 var_declarations
 	:var_declarations VAR id_list ':' type ';'
 	{
+		for(tmp = var_list; tmp != NULL; tmp = tmp->next) {
+			tmp->type = $5;
+		}
 	}
 	|/*empty*/
 ;
@@ -81,18 +91,22 @@ var_declarations
 type
 	:standard_type
 	{
+		$$ = $1;
 	}
 	|ARRAY '[' INUM DOTS INUM ']' OF standard_type
 	{
+		$$ = $ARRAY - $6;
 	}
 ;
 
 standard_type
 	:INT
 	{
+		$$ = INT;
 	}
 	|REAL
 	{
+		$$ = REAL;
 	}
 ;
 
@@ -132,110 +146,137 @@ arguments
 compound_statement
 	:BEG optional_statments END
 	{
+		$$ = $2;
 	}
 ;
 
 optional_statements
 	: statement_list
 	{
+		$$ = $1;
 	}
 	|/*empty*/
 	{
+		$$ = NULL;
 	}
 ;
 
 statement_list
 	:statement
 	{
+		$$ = $1;
 	}
 	|statement_list ';' statement
 	{
+		$$ = mktree(LIST, $1, $3);
 	}
 ;
 statement
 	: var ASSIGNOP expression
 	{
+		$$ = mktree(ASSIGNOP, $1, $3);
 	}
 	|proc_statement
 	{
+		$$ = $1;
 	}
 	|compound_statement
 	{
+		$$ = $1;
 	}
 	|IF expression THEN statement ELSE statement
 	{
+		$$ = mktree(IF, $2, mktree(THEN, $4, $6));
 	}
 	|WHILE expression DO statement
 	{
+		$$ = mktree(WHILE, $2, $4)
 	}
 ;
 
 var
 	:ID
 	{
+		$$ = mkid($1)
 	}
 	|ID '[' expression ']'
 	{
+		$$ = mktree(ARRAY_ACCESS, mkid($1), $3);
 	}
 ;
 
 proc_statement
 	:ID
 	{
+		$$ = mkid($1);
 	}
 	|ID '(' expression_list ')'
 	{
+		$$ = mktree(PCALL, mkid($1), $3);
 	}
 ;
 
 expression_list
 	:expression
 	{
+		$$ = $1;
 	}
 	|expression_list ',' expression
 	{
+		$$ = mktree(LIST, $1, $3);
 	}
 ;
 
 expression
 	:simple_expression
 	{
+		$$ = $1;
 	}
 	|simple_expression RELOP simple_expression
 	{
+		$$ = mkop(RELOP, $2, $1, $3);
 	}
 ;
 
 term
 	:factor
 	{
+		$$ = mktree(LIST, $1, $3);
 	}
 	|term MULOP factor
 	{
+		$$ = mkop(MULOP, $2, $1, $3);
 	}
 ;
 
 factor
 	:ID
 	{
+		$$ = mkid($1);
 	}
 	|ID '[' expression ']'
 	{
+		$$ = mktree(ARRAY_ACCESS, mkid($1), $3)
 	}
 	|ID '(' expression_list ')'
 	{
+		$$ = mktree(FCALL, mkid($1), $3);
 	}
 	|INUM
 	{
+		$$ = mkinum($1);
 	}
 	|RNUM
 	{
+		$$ = mkrnum($1);
 	}
 	| '(' expression ')'
 	{
+		$$ = $2;
 	}
 	|NOT factor
 	{
+		$$ = mktree(NOT, $2, NULL);
 	}
 ;
 
