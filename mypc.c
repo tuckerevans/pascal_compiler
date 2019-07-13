@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include "y.tab.h"
+#include "pc.h"
+
+extern char *yytext;
+extern int line_num;
+
 char* pretty_type(t)
 int t;
 {
@@ -117,5 +123,12 @@ char* msg;
 	fprintf(stderr, "%s\n", yytext);
 	exit(1);
 #endif
+	return 0;
+}
+
+int main()
+{
+	yyparse();
+
 	return 0;
 }
