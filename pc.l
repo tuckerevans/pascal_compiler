@@ -39,13 +39,13 @@ id	[A-Za-z][A-Za-z0-9_]*
 
 "procedure" {
 	debug_print(PROC, NULL);
-	s = push_scope(s);
+	/*s = push_scope(s);*/
 	return PROC;
 }
 
 "function" {
 	debug_print(FUNC, NULL);
-	s = push_scope(s);
+	/*s = push_scope(s);*/
 	return FUNC;
 }
 
