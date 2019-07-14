@@ -86,8 +86,8 @@ extern int yylex();
 program
 	:PROG ID '(' id_list ')' ';'
 	var_declarations
-	sub-prog declarations
-	compound_statemnt
+	sub_prog_declarations
+	compound_statement
 	'.'
 	{
 	}
@@ -136,22 +136,22 @@ standard_type
 	}
 ;
 
-sub-prog_declarations
-	:sub-prog_declarations sub-prog_declaration ';'
+sub_prog_declarations
+	:sub_prog_declarations sub_prog_declaration ';'
 	{
 	}
 	|/*empty*/
 ;
-sub-prog_declaration
-	:sub-prog_head
-	 declarations
-	 sub-prog_declarations
-	 compound_statument
+sub_prog_declaration
+	:sub_prog_head
+	 var_declarations
+	 sub_prog_declarations
+	 compound_statement
 	{
 	}
 ;
 
-sub-prog_head
+sub_prog_head
 	:FUNC ID arguments ':' standard_type ';'
 	{
 	}
@@ -169,14 +169,21 @@ arguments
 	}
 ;
 
+param_list
+	:id_list ':' type
+	{
+	}
+	|param_list ':' type
+	;
+
 compound_statement
-	:BEG optional_statments END
+	:BEG opt_statements END
 	{
 		$$ = $2;
 	}
 ;
 
-optional_statements
+opt_statements
 	: statement_list
 	{
 		$$ = $1;
@@ -198,7 +205,7 @@ statement_list
 	}
 ;
 statement
-	: var ASSIGNOP expression
+	: var ASSIGNOP expr
 	{
 		$$ = mktree(ASSIGNOP, $1, $3);
 	}
@@ -210,11 +217,11 @@ statement
 	{
 		$$ = $1;
 	}
-	|IF expression THEN statement ELSE statement
+	|IF expr THEN statement ELSE statement
 	{
 		$$ = mktree(IF, $2, mktree(THEN, $4, $6));
 	}
-	|WHILE expression DO statement
+	|WHILE expr DO statement
 	{
 		$$ = mktree(WHILE, $2, $4)
 	}
@@ -225,7 +232,7 @@ var
 	{
 		$$ = mkid($1)
 	}
-	|ID '[' expression ']'
+	|ID '[' expr ']'
 	{
 		$$ = mktree(ARRAY_ACCESS, mkid($1), $3);
 	}
@@ -236,31 +243,42 @@ proc_statement
 	{
 		$$ = mkid($1);
 	}
-	|ID '(' expression_list ')'
+	|ID '(' expr_list ')'
 	{
 		$$ = mktree(PCALL, mkid($1), $3);
 	}
 ;
 
-expression_list
-	:expression
+expr_list
+	:expr
 	{
 		$$ = $1;
 	}
-	|expression_list ',' expression
+	|expr_list ',' expr
 	{
 		$$ = mktree(LIST, $1, $3);
 	}
 ;
 
-expression
-	:simple_expression
+expr
+	:simple_expr
 	{
 		$$ = $1;
 	}
-	|simple_expression RELOP simple_expression
+	|simple_expr RELOP simple_expr
 	{
 		$$ = mkop(RELOP, $2, $1, $3);
+	}
+;
+
+simple_expr
+	:term
+	{
+		$$ = $1;
+	}
+	|simple_expr ADDOP term
+	{
+		$$ = mkop(ADDOP, $2, $1, $3);
 	}
 ;
 
@@ -280,11 +298,11 @@ factor
 	{
 		$$ = mkid($1);
 	}
-	|ID '[' expression ']'
+	|ID '[' expr ']'
 	{
 		$$ = mktree(ARRAY_ACCESS, mkid($1), $3)
 	}
-	|ID '(' expression_list ')'
+	|ID '(' expr_list ')'
 	{
 		$$ = mktree(FCALL, mkid($1), $3);
 	}
@@ -296,7 +314,7 @@ factor
 	{
 		$$ = mkrnum($1);
 	}
-	| '(' expression ')'
+	| '(' expr ')'
 	{
 		$$ = $2;
 	}
@@ -306,4 +324,3 @@ factor
 	}
 ;
 
-%%
