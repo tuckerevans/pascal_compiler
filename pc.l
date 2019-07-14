@@ -203,6 +203,17 @@ id	[A-Za-z][A-Za-z0-9_]*
 	return RNUM;
 }
 
+{number}[eE][+-]?{number} {
+	yylval.rval = atof(yytext);
+	debug_print(RNUM, &yylval);
+	return RNUM;
+}
+{number}.{number}[eE][+-]?{number} {
+	yylval.rval = atof(yytext);
+	debug_print(RNUM, &yylval);
+	return RNUM;
+}
+
 {id} {
 	yylval.sval = strdup(yytext);
 	debug_print(ID, &yylval);
