@@ -1,7 +1,7 @@
 %{
 
-#include "pc.h"
 #include "y.tab.h"
+#include "pc.h"
 
 int line_num=1;
 
