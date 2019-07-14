@@ -107,7 +107,8 @@ id_list
 var_declarations
 	:var_declarations VAR id_list ':' type ';'
 	{
-		for(tmp = var_list; tmp != NULL; tmp = tmp->next) {
+		ptree *tmp;
+		for(tmp = $3; tmp; tmp = tmp->l) {
 			tmp->type = $5;
 		}
 	}
@@ -121,7 +122,7 @@ type
 	}
 	|ARRAY '[' INUM DOTS INUM ']' OF standard_type
 	{
-		$$ = $ARRAY - $6;
+		$$ = ARRAY - $8;
 	}
 ;
 
@@ -180,6 +181,7 @@ compound_statement
 	:BEG opt_statements END
 	{
 		$$ = $2;
+		print_tree($$);
 	}
 ;
 
@@ -223,14 +225,14 @@ statement
 	}
 	|WHILE expr DO statement
 	{
-		$$ = mktree(WHILE, $2, $4)
+		$$ = mktree(WHILE, $2, $4);
 	}
 ;
 
 var
 	:ID
 	{
-		$$ = mkid($1)
+		$$ = mkid($1);
 	}
 	|ID '[' expr ']'
 	{
@@ -285,7 +287,7 @@ simple_expr
 term
 	:factor
 	{
-		$$ = mktree(LIST, $1, $3);
+		$$ = $1;
 	}
 	|term MULOP factor
 	{
@@ -300,7 +302,7 @@ factor
 	}
 	|ID '[' expr ']'
 	{
-		$$ = mktree(ARRAY_ACCESS, mkid($1), $3)
+		$$ = mktree(ARRAY_ACCESS, mkid($1), $3);
 	}
 	|ID '(' expr_list ')'
 	{
