@@ -23,10 +23,12 @@ TODO:
 %token VAR
 %token PROC FUNC
 %token BEG END
+%token <sval> ID
 
 %token <opval> ADDOP
 %token <opval> MULOP
 %token <opval> RELOP
+%token ASSIGNOP
 
 %token ADD SUB
 %token MUL DIV
@@ -54,6 +56,25 @@ TODO:
 %token ARRAY_ACCESS
 
 %token LIST
+
+
+%type <tval> factor
+%type <tval> term
+%type <tval> expr
+%type <tval> simple_expr
+
+%type <tval> id_list
+%type <tval> expr_list
+
+%type <tval> statement
+%type <tval> statement_list
+%type <tval> compound_statement
+%type <tval> opt_statements
+%type <tval> proc_statement
+
+%type <tval> var
+%type <ival> type
+%type <ival> standard_type
 
 %%
 
