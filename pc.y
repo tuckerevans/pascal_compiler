@@ -162,6 +162,13 @@ sub_prog_head
 ;
 
 arguments
+	:'(' param_list ')'
+	{
+	}
+	|/*empty*/
+;
+
+param_list
 	:id_list ':' type
 	{
 	}
@@ -169,13 +176,6 @@ arguments
 	{
 	}
 ;
-
-param_list
-	:id_list ':' type
-	{
-	}
-	|param_list ':' type
-	;
 
 compound_statement
 	:BEG opt_statements END
