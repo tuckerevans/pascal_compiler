@@ -1,13 +1,18 @@
 %{
+#include <stdlib.h>
+#include <stddef.h>
 
-#include "pc.h"
+#include "tree.h"
 #include "y.tab.h"
-#include "sem_check.h"
+#include "pc.h"
+/*#include "sem_check.h"*/
 
 /*
 TODO:
 - Add checkid() to counter mkid()
 */
+
+extern int yylex();
 
 %}
 
