@@ -19,7 +19,7 @@ id	[A-Za-z][A-Za-z0-9_]*
 <COMMENT>\n {}
 
 ^[ \t]*"{"	{BEGIN COMMENT;}
-<COMMENT> "}"	{BEGIN INITIAL;}
+<COMMENT>"}"	{BEGIN INITIAL;}
 
 ^[ \t]*"(*"	{BEGIN COMMENT;}
 <COMMENT>"*)"	{BEGIN INITIAL;}
