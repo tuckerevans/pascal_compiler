@@ -59,7 +59,8 @@ ptree *l, *r;
 void print_tree(t)
 ptree *t;
 {
-	fprintf(stderr, "\n\n");
+	fprintf(stderr, "\n\nTREE\n"
+	"==========================================================\n");
 	aux_tree_print(t, 0);
 	return;
 }
