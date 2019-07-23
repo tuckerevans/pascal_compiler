@@ -65,6 +65,12 @@ union YYSTYPE* y;
 		fprintf(stderr, "[WHILE]");
 	} else if (d == DO){
 		fprintf(stderr, "[DO]");
+	} else if (d == FOR){
+		fprintf(stderr, "[FOR]");
+	} else if (d == TO){
+		fprintf(stderr, "[TO]");
+	} else if (d == DT){
+		fprintf(stderr, "[DOWNTO]");
 	} else if (d == NOT){
 		fprintf(stderr, "[NOT]");
 	} else if (d == DOTS){

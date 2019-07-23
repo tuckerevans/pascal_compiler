@@ -104,6 +104,21 @@ id	[A-Za-z][A-Za-z0-9_]*
 	return DO;
 }
 
+"for" {
+	debug_print(FOR, NULL);
+	return FOR;
+}
+
+"to" {
+	debug_print(TO, NULL);
+	return TO;
+}
+
+"downto" {
+	debug_print(DT, NULL);
+	return DT;
+}
+
 "not" {
 	debug_print(NOT, NULL);
 	return NOT;

@@ -56,6 +56,7 @@ extern int yylex();
 
 %token IF ELSE THEN
 %token WHILE DO
+%token FOR TO DT
 
 %token FCALL PCALL
 %token ARRAY_ACCESS
@@ -227,7 +228,14 @@ statement
 	{
 		$$ = mktree(WHILE, $2, $4);
 	}
+	|FOR var ASSIGNOP expr TD expr DO statement
+	{
+		/*TODO design tree structure for FOR loops*/
+		$$ = NULL;
+	}
 ;
+
+TD: TO | DT;
 
 var
 	:ID
