@@ -6,10 +6,10 @@
 #include "node.h"
 
 /*constructor*/
-node_t* mknode(str)
+node* mknode(str)
 char *str;
 {
-	node_t *p = malloc(sizeof(node_t));
+	node *p = malloc(sizeof(node));
 	assert(p);
 
 	p->name = strdup(str);
@@ -19,11 +19,11 @@ char *str;
 }
 
 /* helpers */
-node_t* search(root, str)
-node_t *root;
+node* search(root, str)
+node *root;
 char *str;
 {
-	node_t *p = root;
+	node *p = root;
 	while (p) {
 		if (!strcmp(p->name, str)) {
 			return p;
@@ -33,11 +33,11 @@ char *str;
 	return NULL;
 }
 
-node_t* insert(root, str) /*TODO change to accept double pointer*/
-node_t *root;
+node* insert(root, str) /*TODO change to accept double pointer*/
+node *root;
 char * str;
 {
-	node_t *p = mknode( str );
+	node *p = mknode( str );
 	p->next = root;
 	return p;
 }

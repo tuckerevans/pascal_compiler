@@ -7,6 +7,7 @@ typedef struct parse_tree {
 		int ival; /* NUM */
 		float rval; /* RNUM */
 		char *sval; /* ID */
+		node *nval;
 		int opval; /* RELOP: LT LE GT GE EQ NE
 			      ADDOP: PLUS MINUS OR
 			      MULOP: MUL DIV

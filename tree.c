@@ -3,10 +3,10 @@
 #include <string.h>
 #include <assert.h>
 
+#include "node.h"
 #include "tree.h"
 #include "y.tab.h"
-
-extern void yyerror(char*);
+#include "pc.h"
 
 /* parse tree funcs */
 ptree* mktree(type, l, r)
@@ -47,7 +47,7 @@ float n;
 	return p;
 }
 
-ptree * mkop(type, sub, l, r)
+ptree* mkop(type, sub, l, r)
 int type, sub;
 ptree *l, *r;
 {
