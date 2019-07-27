@@ -27,7 +27,8 @@ ptree* mkid(str)
 char *str;
 {
 	ptree *p = mktree(ID, NULL, NULL);
-	p->attr.sval = strdup(str); /* memory leak? double strdup*/
+	p->attr.nval = malloc(sizeof(node)); /*TODO fix hacky node create*/
+	p->attr.nval->name = strdup(str); /* memory leak? double strdup*/
 	return p;
 }
 
@@ -55,6 +56,30 @@ ptree *l, *r;
 	p->attr.opval = sub;
 	return p;
 }
+
+void update_type_info(list, type)
+int type;
+ptree *list;
+{
+	assert(list);
+	while (list->r && list->r->type == ID) {
+		/*Set type of right child through list*/
+		list->r->attr.nval->var_type = type;
+		
+		if (list->l) {
+			if (list->l->type == LIST) {
+				list = list->l;
+				continue; /*Continue down list*/
+			} else if (list->l->type == ID)
+				/*Set type of first declared ID (only left node in LIST)*/
+				list->l->attr.nval->var_type = type;
+		}
+		return; /*At _end_ of list (did not continue)*/
+	}
+}
+
+
+/*PRINT FUNCS*/
 
 void print_tree(t)
 ptree *t;
@@ -94,7 +119,7 @@ int spaces;
 				fprintf(stderr, "[LIST]");
 				break;
 			case ID:
-				fprintf(stderr, "[ID: %s]", t->attr.sval);
+				fprintf(stderr, "[ID: %s %d]", t->attr.nval->name, t->attr.nval->var_type);
 				break;
 			case INUM:
 				fprintf(stderr, "[INUM: %d]", t->attr.ival);

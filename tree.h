@@ -25,4 +25,6 @@ ptree* mkinum(int);
 ptree* mkrnum(float);
 ptree* mkop(int, int, ptree*, ptree*);
 
+void update_type_info(ptree*, int);
+
 #endif

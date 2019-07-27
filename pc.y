@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 
+#include "node.h"
 #include "tree.h"
 #include "y.tab.h"
 #include "pc.h"
@@ -108,10 +109,7 @@ id_list
 var_declarations
 	:var_declarations VAR id_list ':' type ';'
 	{
-		ptree *tmp;
-		for(tmp = $3; tmp; tmp = tmp->l) {
-			tmp->type = $5;
-		}
+		update_type_info($3, $5);
 	}
 	|/*empty*/
 ;
