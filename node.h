@@ -13,7 +13,9 @@ typedef struct node_s {
 node* mknode(char *);
 
 /* helpers */
-node* search(node*, char *);
-node* insert(node*, char*);
+node* list_search(node*, char *);
+node* list_insert(node*, char*);
+
+void free_list(node*);
 
 #endif

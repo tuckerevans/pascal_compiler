@@ -41,3 +41,13 @@ char * str;
 	p->next = root;
 	return p;
 }
+
+void free_list(n)
+node *n;
+{
+	node *tmp;
+
+	for(tmp = n; tmp; tmp = n = n->next) {
+		free(tmp);
+	}
+}
