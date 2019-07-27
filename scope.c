@@ -1,10 +1,10 @@
 #include <stdio.h>
-#include <stdilb.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <string.h>
 
 #include "node.h"
-#include "hash.h"
+#include "scope.h"
 
 scope* mkscope(prev)
 scope* prev;

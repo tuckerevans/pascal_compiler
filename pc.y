@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stddef.h>
 
+#include "node.h"
+#include "scope.h"
 #include "tree.h"
 #include "y.tab.h"
 #include "pc.h"
