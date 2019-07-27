@@ -6,8 +6,7 @@
 #include "node.h"
 #include "scope.h"
 
-scope* mkscope(prev)
-scope* prev;
+scope* mkscope()
 {
 	int i;
 	
@@ -17,7 +16,7 @@ scope* prev;
 	for (i = 0; i < HASH_SIZE; i++)
 		p->table[i] = NULL;
 
-	p->next = next;
+	p->next = NULL;
 	p->function_boundry = 0;
 
 	return p;
@@ -32,7 +31,7 @@ scope *s;
 		return;
 
 	for (i = 0; i < HASH_SIZE; i++) {
-		free_nodes(s->table[i]);
+		free_list(s->table[i]);
 	}
 
 	free(s);
@@ -57,15 +56,15 @@ char* s;
 	return h % HASH_SIZE;
 }
 
-scope* push_scope(root);
-scope* root;
+scope* push_scope(root)
+scope *root;
 {
 	scope *p = mkscope();
 	p->next = root;
 	return p;
 }
 
-scope* pop_scope(root);
+scope* pop_scope(root)
 scope *root;
 {
 	scope *p;
@@ -79,11 +78,11 @@ scope *root;
 	return p;
 }
 
-node* scope_insert(s, name)
-scope *s;
+node* scope_insert(root, name)
+scope *root;
 char *name;
 {
-	int hash = hashpwj(name);
+	int hash = hashpjw(name);
 
 	node *tmp = root->table[hash];
 	return root->table[hash] = list_insert(tmp, name);
@@ -93,7 +92,7 @@ node* scope_search(root, name)
 scope *root;
 char *name;
 {
-	int hash = hashpwj(name);
+	int hash = hashpjw(name);
 
 	node *tmp = root->table[hash];
 	return list_search(tmp, name);
@@ -123,8 +122,8 @@ char *name;
 	for (p = root; p; p = p->next) {
 		if (tmp = scope_search(p, name))
 			return tmp;
-		if (p->f)
-			return NULL
+		if (p->function_boundry)
+			return NULL;
 	}
 
 	return NULL;
@@ -134,7 +133,7 @@ void print_scope(s)
 scope *s;
 {
 	int i;
-	node_t * tmp;
+	node * tmp;
 	for (i = 0; i < HASH_SIZE; i++) {
 		for( tmp=s->table[i]; tmp; tmp = tmp->next) {
 			fprintf(stderr, "\t%s\n", tmp->name);

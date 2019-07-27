@@ -9,7 +9,7 @@ typedef struct hash {
 	char function_boundry;
 } scope;
 
-scope* mkscope(scope*);
+scope* mkscope();
 void free_scope(scope*);
 
 /*stack routines*/
@@ -23,5 +23,5 @@ node* scope_search(scope*, char*);
 node* scope_safe_search_all(scope*, char*);
 
 /*hash function*/
-int hash_pwj(char*);
+int hashpjw(char*);
 #endif

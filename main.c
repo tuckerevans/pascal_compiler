@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include "node.h"
+#include "scope.h"
 #include "y.tab.h"
 #include "pc.h"
 

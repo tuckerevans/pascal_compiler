@@ -19,7 +19,7 @@ char *str;
 }
 
 /* helpers */
-node* search(root, str)
+node* list_search(root, str)
 node *root;
 char *str;
 {
@@ -33,7 +33,7 @@ char *str;
 	return NULL;
 }
 
-node* insert(root, str) /*TODO change to accept double pointer*/
+node* list_insert(root, str) /*TODO change to accept double pointer*/
 node *root;
 char * str;
 {
