@@ -56,26 +56,29 @@ char* s;
 	return h % HASH_SIZE;
 }
 
-scope* push_scope(root)
-scope *root;
+void push_scope(root)
+scope **root;
 {
-	scope *p = mkscope();
-	p->next = root;
-	return p;
+	scope *tmp = mkscope();
+	
+	assert(tmp);
+
+	tmp->prev = *root;
+	*root = tmp;
 }
 
-scope* pop_scope(root)
-scope *root;
+void pop_scope(root)
+scope **root;
 {
-	scope *p;
+	scope *tmp;
 
-	if (!root)
-		return NULL;
+	if (!*root)
+		return;
 
-	p = root->next;
+	tmp = *root;
+	*root = (*root)->prev;
 
-	free_scope(root);
-	return p;
+	free_scope(tmp);
 }
 
 node* scope_insert(root, name)
@@ -105,7 +108,7 @@ char *name;
 	scope *p;
 	node *tmp;
 
-	for (p = root; p; p = p->next)
+	for (p = root; p; p = p->prev)
 		if (tmp = scope_search(p, name))
 			return tmp;
 
@@ -119,10 +122,10 @@ char *name;
 	scope *p;
 	node *tmp;
 
-	for (p = root; p; p = p->next) {
+	for (p = root; p; p = p->prev) {
 		if (tmp = scope_search(p, name))
 			return tmp;
-		if (p->function_boundry)
+		if (p->ret_var)
 			return NULL;
 	}
 

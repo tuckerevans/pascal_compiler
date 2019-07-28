@@ -5,16 +5,16 @@
 
 typedef struct hash {
 	node* table[HASH_SIZE];
-	struct hash *prev, *next;
-	char function_boundry;
+	struct hash *prev;
+	node* ret_var;
 } scope;
 
 scope* mkscope();
 void free_scope(scope*);
 
 /*stack routines*/
-scope* pop_scope(scope*);
-scope* push_scope(scope*);
+void pop_scope(scope**);
+void push_scope(scope**);
 
 /*helpers*/
 node* scope_insert(scope*, char*);

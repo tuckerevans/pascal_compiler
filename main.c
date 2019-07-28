@@ -10,6 +10,8 @@
 extern char *yytext;
 extern int line_num;
 
+scope *cur_scope;
+
 char* pretty_type(t)
 int t;
 {
@@ -136,6 +138,9 @@ char* msg;
 
 int main()
 {
+	cur_scope = mkscope();
+	assert(cur_scope);
+
 	yyparse();
 
 	return 0;

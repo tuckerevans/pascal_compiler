@@ -7,7 +7,7 @@
 #include "tree.h"
 #include "y.tab.h"
 #include "pc.h"
-/*#include "sem_check.h"*/
+#include "sem_check.h"
 
 /*
 TODO:
@@ -15,6 +15,7 @@ TODO:
 */
 
 extern int yylex();
+extern scope *cur_scope;
 
 %}
 
