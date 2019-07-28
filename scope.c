@@ -16,8 +16,8 @@ scope* mkscope()
 	for (i = 0; i < HASH_SIZE; i++)
 		p->table[i] = NULL;
 
-	p->next = NULL;
-	p->function_boundry = 0;
+	p->prev = NULL;
+	p->ret_var= NULL;
 
 	return p;
 }

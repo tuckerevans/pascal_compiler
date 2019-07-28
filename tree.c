@@ -23,11 +23,11 @@ ptree *l, *r;
 	return t;
 }
 
-ptree* mkid(str)
-char *str;
+ptree* mkid(n)
+node *n;
 {
 	ptree *p = mktree(ID, NULL, NULL);
-	p->attr.sval = strdup(str); /* memory leak? double strdup*/
+	p->attr.nval = n; /* memory leak? double strdup*/
 	return p;
 }
 
@@ -94,7 +94,7 @@ int spaces;
 				fprintf(stderr, "[LIST]");
 				break;
 			case ID:
-				fprintf(stderr, "[ID: %s]", t->attr.sval);
+				fprintf(stderr, "[ID: %s]", t->attr.nval->name);
 				break;
 			case INUM:
 				fprintf(stderr, "[INUM: %d]", t->attr.ival);

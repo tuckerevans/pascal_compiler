@@ -73,6 +73,8 @@ extern scope *cur_scope;
 %type <tval> simple_expr
 
 %type <tval> id_list
+%type <tval> param_list
+%type <tval> arguments
 %type <tval> expr_list
 
 %type <tval> statement
@@ -100,11 +102,15 @@ program
 id_list
 	:ID
 	{
-		$$ = mkid($1);
+		check_id(cur_scope, $1);
+
+		$$ = scope_insert(cur_scope, $1);
 	}
 	|id_list ',' ID
 	{
-		$$ = mktree(LIST, $1, mkid($3));
+		check_id(cur_scope, $3);
+
+		$$ = mktree(LIST, $1, scope_insert(cur_scope, $3));
 	}
 ;
 
@@ -156,18 +162,28 @@ sub_prog_declaration
 	}
 ;
 
+/*push_scope called in pc.l*/
 sub_prog_head
 	:FUNC ID arguments ':' standard_type ';'
 	{
+		check_id(cur_scope->prev, $2);
+		scope_insert(cur_scope->prev, $2);
+
+		cur_scope->ret_var = scope_insert(cur_scope, $2);
+		cur_scope->ret_var->var_type = $5;
+
 	}
 	|PROC ID arguments ';'
 	{
+		check_id(cur_scope->prev, $2);
+		scope_insert(cur_scope->prev, $2);
 	}
 ;
 
 arguments
 	:'(' param_list ')'
 	{
+		$$ = $2;
 	}
 	|/*empty*/
 ;
@@ -175,9 +191,11 @@ arguments
 param_list
 	:id_list ':' type
 	{
+		$$ = $1;
 	}
 	|param_list ';' id_list ':' type
 	{
+		$$ = mktree(LIST, $1, $3);
 	}
 ;
 
@@ -243,22 +261,33 @@ TD: TO | DT;
 var
 	:ID
 	{
-		$$ = mkid($1);
+		check_id(cur_scope, $1);
+		$$ = mkid(scope_insert(cur_scope,$1));
 	}
 	|ID '[' expr ']'
 	{
-		$$ = mktree(ARRAY_ACCESS, mkid($1), $3);
+		node* tmp;
+		check_id(cur_scope, $1);
+		tmp = scope_insert(cur_scope, $1);
+
+		$$ = mktree(ARRAY_ACCESS, mkid(tmp), $3);
 	}
 ;
 
 proc_statement
 	:ID
 	{
-		$$ = mkid($1);
+		node *tmp;
+
+		tmp = check_exists(cur_scope, $1);
+		$$ = mktree(PCALL, mkid(tmp), NULL);
 	}
 	|ID '(' expr_list ')'
 	{
-		$$ = mktree(PCALL, mkid($1), $3);
+		node *tmp;
+
+		tmp = check_exists(cur_scope, $1);
+		$$ = mktree(PCALL, mkid(tmp), $3);
 	}
 ;
 
@@ -309,15 +338,24 @@ term
 factor
 	:ID
 	{
-		$$ = mkid($1);
+		node *tmp;
+
+		tmp = check_exists(cur_scope, $1);
+		$$ = mkid(tmp);
 	}
 	|ID '[' expr ']'
 	{
-		$$ = mktree(ARRAY_ACCESS, mkid($1), $3);
+		node *tmp;
+
+		tmp = check_exists(cur_scope, $1);
+		$$ = mktree(ARRAY_ACCESS, mkid(tmp), $3);
 	}
 	|ID '(' expr_list ')'
 	{
-		$$ = mktree(FCALL, mkid($1), $3);
+		node *tmp;
+
+		tmp = check_exists(cur_scope, $1);
+		$$ = mktree(FCALL, mkid(tmp), $3);
 	}
 	|INUM
 	{

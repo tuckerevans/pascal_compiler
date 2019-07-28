@@ -6,7 +6,6 @@ typedef struct parse_tree {
 	union {
 		int ival; /* NUM */
 		float rval; /* RNUM */
-		char *sval; /* ID */
 		node *nval;
 		int opval; /* RELOP: LT LE GT GE EQ NE
 			      ADDOP: PLUS MINUS OR
@@ -20,7 +19,7 @@ void aux_tree_print(ptree*, int);
 void print_tree(ptree*);
 
 ptree* mktree(int, ptree*, ptree*);
-ptree* mkid(char*);
+ptree* mkid(node*);
 ptree* mkinum(int);
 ptree* mkrnum(float);
 ptree* mkop(int, int, ptree*, ptree*);
