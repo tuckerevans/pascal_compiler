@@ -159,6 +159,7 @@ sub_prog_declaration
 	 sub_prog_declarations
 	 compound_statement
 	{
+		pop_scope(&cur_scope);
 	}
 ;
 
@@ -171,7 +172,6 @@ sub_prog_head
 
 		cur_scope->ret_var = scope_insert(cur_scope, $2);
 		cur_scope->ret_var->var_type = $5;
-
 	}
 	|PROC ID arguments ';'
 	{
