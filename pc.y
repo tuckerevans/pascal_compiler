@@ -102,21 +102,27 @@ program
 id_list
 	:ID
 	{
+		/*TODO remove check_ids*/
+		node *tmp;
 		check_id(cur_scope, $1);
 
-		$$ = scope_insert(cur_scope, $1);
+		tmp = scope_insert(cur_scope, $1);
+		$$ = mkid(tmp);
 	}
 	|id_list ',' ID
 	{
-		check_id(cur_scope, $3);
+		node *tmp;
 
-		$$ = mktree(LIST, $1, scope_insert(cur_scope, $3));
+		check_id(cur_scope, $3);
+		tmp = scope_insert(cur_scope, $3);
+		$$ = mktree(LIST, $1, mkid(tmp));
 	}
 ;
 
 var_declarations
 	:var_declarations VAR id_list ':' type ';'
 	{
+		/*CHECK IDS HERE*/
 		ptree *tmp;
 		for(tmp = $3; tmp; tmp = tmp->l) {
 			tmp->type = $5;
