@@ -1,4 +1,4 @@
-CC = gcc
+CC = tcc
 FLAGS = -g
 YACC = yacc
 LEX = lex
