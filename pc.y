@@ -9,10 +9,6 @@
 #include "pc.h"
 #include "sem_check.h"
 
-/*
-TODO:
-- Add checkid() to counter mkid()
-*/
 
 extern int yylex();
 extern scope *cur_scope;
@@ -122,11 +118,10 @@ id_list
 var_declarations
 	:var_declarations VAR id_list ':' type ';'
 	{
-		/*CHECK IDS HERE*/
 		ptree *tmp;
-		for(tmp = $3; tmp; tmp = tmp->l) {
+		for(tmp = $3; tmp; tmp = tmp->l)
 			tmp->type = $5;
-		}
+		
 	}
 	|/*empty*/
 ;
@@ -267,13 +262,11 @@ TD: TO | DT;
 var
 	:ID
 	{
-		check_id(cur_scope, $1);
 		$$ = mkid(scope_insert(cur_scope,$1));
 	}
 	|ID '[' expr ']'
 	{
 		node* tmp;
-		check_id(cur_scope, $1);
 		tmp = scope_insert(cur_scope, $1);
 
 		$$ = mktree(ARRAY_ACCESS, mkid(tmp), $3);
