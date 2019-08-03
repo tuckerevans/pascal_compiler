@@ -35,6 +35,7 @@ scope *s;
 	}
 
 	free(s);
+	s = NULL;
 }
 
 /*Copied from Compilers, Aho*/

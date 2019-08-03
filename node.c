@@ -47,7 +47,10 @@ node *n;
 {
 	node *tmp;
 
-	for(tmp = n; tmp; tmp = n = n->next) {
+	for(tmp = n; tmp;) {
+		n = tmp->next;
 		free(tmp);
+		tmp = NULL;
+		tmp = n;
 	}
 }
