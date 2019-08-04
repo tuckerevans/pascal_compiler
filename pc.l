@@ -17,14 +17,14 @@ id	[A-Za-z][A-Za-z0-9_]*
 
 %%
 
-<COMMENT>. {}
-<COMMENT>\n {}
-
 ^[ \t]*"{"	{BEGIN COMMENT;}
 <COMMENT>"}"	{BEGIN INITIAL;}
 
 ^[ \t]*"(*"	{BEGIN COMMENT;}
 <COMMENT>"*)"	{BEGIN INITIAL;}
+
+<COMMENT>. {}
+<COMMENT>\n {}
 
 
 {whitespace}	;
