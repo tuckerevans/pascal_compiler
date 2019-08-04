@@ -142,6 +142,7 @@ int main()
 	assert(cur_scope);
 
 	yyparse();
+	free_scope(cur_scope);
 
 	return 0;
 }

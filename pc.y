@@ -93,6 +93,7 @@ program
 	'.'
 	{
 		print_tree($9);
+		free_tree($4);
 	}
 ;
 
@@ -159,6 +160,7 @@ sub_prog_declaration
 	 compound_statement
 	{
 		print_tree($4);
+		free_tree($4);
 		pop_scope(&cur_scope);
 	}
 ;

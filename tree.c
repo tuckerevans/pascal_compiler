@@ -143,3 +143,14 @@ int spaces;
 	}
 
 }
+
+void free_tree(t)
+ptree *t;
+{
+	if (!t)
+		return;
+
+	free_tree(t->l);
+	free_tree(t->r);
+	free(t);
+}
