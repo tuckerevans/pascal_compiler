@@ -260,12 +260,12 @@ TD: TO | DT;
 var
 	:ID
 	{
-		$$ = mkid(scope_insert(cur_scope,$1));
+		$$ = mkid(scope_safe_search_all(cur_scope,$1));
 	}
 	|ID '[' expr ']'
 	{
 		node* tmp;
-		tmp = scope_insert(cur_scope, $1);
+		tmp = scope_safe_search_all(cur_scope, $1);
 
 		$$ = mktree(ARRAY_ACCESS, mkid(tmp), $3);
 	}
