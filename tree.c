@@ -27,7 +27,7 @@ ptree* mkid(n)
 node *n;
 {
 	ptree *p = mktree(ID, NULL, NULL);
-	p->attr.nval = n; /* memory leak? double strdup*/
+	p->attr.nval = n;
 	return p;
 }
 
@@ -70,7 +70,8 @@ ptree *list;
 				list = list->l;
 				continue; /*Continue down list*/
 			} else if (list->l->type == ID)
-				/*Set type of first declared ID (only left node in LIST)*/
+				/*Set type of first declared ID
+				    (only left node in LIST)*/
 				list->l->attr.nval->var_type = type;
 		}
 		return; /*At _end_ of list (did not continue)*/
@@ -120,7 +121,16 @@ int spaces;
 				fprintf(stderr, "[LIST]");
 				break;
 			case ID:
-				fprintf(stderr, "[ID: %s %d]", t->attr.nval->name, t->attr.nval->var_type);
+				if (t->r && t->r->attr.nval)
+					fprintf(stderr, "[ID: %s %s]",
+						t->r->attr.nval->name,
+						pretty_type(
+							t->attr.nval->var_type));
+				else
+					fprintf(stderr, "[ID: %s %s]",
+						t->attr.nval->name,
+						pretty_type(
+							t->attr.nval->var_type));
 				break;
 			case INUM:
 				fprintf(stderr, "[INUM: %d]", t->attr.ival);
