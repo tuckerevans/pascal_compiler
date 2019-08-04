@@ -92,6 +92,7 @@ program
 	compound_statement
 	'.'
 	{
+		print_tree($9);
 	}
 ;
 
@@ -157,6 +158,7 @@ sub_prog_declaration
 	 sub_prog_declarations
 	 compound_statement
 	{
+		print_tree($4);
 		pop_scope(&cur_scope);
 	}
 ;
@@ -201,7 +203,6 @@ compound_statement
 	:BEG opt_statements END
 	{
 		$$ = $2;
-		print_tree($$);
 	}
 ;
 
