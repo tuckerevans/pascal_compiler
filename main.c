@@ -2,11 +2,15 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include "node.h"
+#include "scope.h"
 #include "y.tab.h"
 #include "pc.h"
 
 extern char *yytext;
 extern int line_num;
+
+scope *cur_scope;
 
 char* pretty_type(t)
 int t;
@@ -134,6 +138,9 @@ char* msg;
 
 int main()
 {
+	cur_scope = mkscope();
+	assert(cur_scope);
+
 	yyparse();
 
 	return 0;

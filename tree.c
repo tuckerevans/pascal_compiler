@@ -23,12 +23,11 @@ ptree *l, *r;
 	return t;
 }
 
-ptree* mkid(str)
-char *str;
+ptree* mkid(n)
+node *n;
 {
 	ptree *p = mktree(ID, NULL, NULL);
-	p->attr.nval = malloc(sizeof(node)); /*TODO fix hacky node create*/
-	p->attr.nval->name = strdup(str); /* memory leak? double strdup*/
+	p->attr.nval = n; /* memory leak? double strdup*/
 	return p;
 }
 

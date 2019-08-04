@@ -1,9 +1,11 @@
 %{
-
+#include "node.h"
+#include "scope.h"
 #include "y.tab.h"
 #include "pc.h"
 
 int line_num=1;
+extern scope *cur_scope;
 
 %}
 
@@ -39,13 +41,13 @@ id	[A-Za-z][A-Za-z0-9_]*
 
 "procedure" {
 	debug_print(PROC, NULL);
-	/*s = push_scope(s);*/
+	push_scope(&cur_scope);
 	return PROC;
 }
 
 "function" {
 	debug_print(FUNC, NULL);
-	/*s = push_scope(s);*/
+	push_scope(&cur_scope);
 	return FUNC;
 }
 

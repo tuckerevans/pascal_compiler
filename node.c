@@ -19,7 +19,7 @@ char *str;
 }
 
 /* helpers */
-node* search(root, str)
+node* list_search(root, str)
 node *root;
 char *str;
 {
@@ -33,11 +33,24 @@ char *str;
 	return NULL;
 }
 
-node* insert(root, str) /*TODO change to accept double pointer*/
+node* list_insert(root, str) /*TODO change to accept double pointer*/
 node *root;
 char * str;
 {
 	node *p = mknode( str );
 	p->next = root;
 	return p;
+}
+
+void free_list(n)
+node *n;
+{
+	node *tmp;
+
+	for(tmp = n; tmp;) {
+		n = tmp->next;
+		free(tmp);
+		tmp = NULL;
+		tmp = n;
+	}
 }
