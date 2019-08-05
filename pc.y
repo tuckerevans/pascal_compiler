@@ -192,10 +192,12 @@ param_list
 	:id_list ':' type
 	{
 		$$ = $1;
+		update_type_info($1, $3);
 	}
 	|param_list ';' id_list ':' type
 	{
 		$$ = mktree(LIST, $1, $3);
+		update_type_info($3, $5);
 	}
 ;
 

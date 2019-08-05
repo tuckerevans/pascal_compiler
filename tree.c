@@ -61,10 +61,15 @@ int type;
 ptree *list;
 {
 	assert(list);
+	if (list->type == ID) {
+		list->attr.nval->var_type = type;
+		return;
+	}
+
 	while (list->r && list->r->type == ID) {
 		/*Set type of right child through list*/
 		list->r->attr.nval->var_type = type;
-		
+
 		if (list->l) {
 			if (list->l->type == LIST) {
 				list = list->l;

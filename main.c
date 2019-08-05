@@ -17,10 +17,10 @@ int t;
 {
 	if (t == ARRAY) {
 		return "ARRAY";
-	} else if (t == INT - ARRAY) {
+	} else if (t == ARRAY - INT) {
 		return "ARRAY of INT";
-	} else if (t == INT - ARRAY) {
-		return "ARRAY of INT";
+	} else if (t == ARRAY - REAL) {
+		return "ARRAY of REAL";
 	} else if (t == INT) {
 		return "INT";
 	} else if (t == REAL) {

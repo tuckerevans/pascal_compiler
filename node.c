@@ -15,6 +15,8 @@ char *str;
 	p->name = strdup(str);
 	p->next = NULL;
 
+	p->var_type = -1;
+
 	return p;
 }
 
