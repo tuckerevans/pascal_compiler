@@ -167,8 +167,18 @@ sub_prog_declaration
 sub_prog_head
 	:FUNC ID arguments ':' standard_type ';'
 	{
+		node *tmp;
+		int i = -1;
+
 		check_id(cur_scope->prev, $2);
-		scope_insert(cur_scope->prev, $2);
+		tmp = scope_insert(cur_scope->prev, $2);
+
+		assert(tmp->func_info = malloc(sizeof struct fi));
+		/*TODO add count of parameters*/
+		tmp->func_info->argc = i;
+		assert(tmp->func_info->argv = malloc(i * sizeof int));
+
+		tmp->var_type = $5
 
 		cur_scope->ret_var = scope_insert(cur_scope, $2);
 		cur_scope->ret_var->var_type = $5;
