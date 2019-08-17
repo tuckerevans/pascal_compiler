@@ -56,6 +56,21 @@ ptree *t;
 		if (!(t->r && t->l))
 			yyerror("Missing nodes\n");
 
+		if (t->attr.opval == ADD || t->attr.opval == OR) {
+			if(t->l->ret_type == BOOL && t->r->ret_type ==BOOL)
+				return BOOL;
+			else {
+				type = t->l->ret_type == BOOL ?
+					t->r->ret_type : t->l->ret_type;
+
+				snprintf(buf, 100, "Mismached types:"
+						"Cannot use boolean "
+						"operator on type %s\n",
+						pretty_type(type));
+				yyerror(buf);
+			}
+		}
+
 		if (t->r->ret_type == t->l->ret_type)
 			return t->r->ret_type;
 		else {
@@ -70,7 +85,6 @@ ptree *t;
 	case RELOP :
 		if (!(t->r && t->l))
 			yyerror("Missing nodes\n");
-
 		if (t->r->ret_type == t->l->ret_type)
 			return BOOL;
 		else
