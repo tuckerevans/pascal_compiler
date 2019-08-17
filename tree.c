@@ -136,7 +136,6 @@ ptree *t;
 			fprintf(stderr, "\t%d", t->type);
 			yyerror("Error in tree_print");
 	}
-	fprintf(stderr, "\nWHAT: %d\n", t->type);
 	set_ret_type(t->l);
 	set_ret_type(t->r);
 	t->ret_type = check_ret_type(t);

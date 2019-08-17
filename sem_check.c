@@ -53,6 +53,14 @@ ptree *t;
 
 	case ADDOP :
 	case MULOP :
+		if (!(t->r && t->l))
+			yyerror("Missing nodes\n");
+
+		if (t->r->ret_type == t->l->ret_type)
+			return t->r->ret_type;
+		else
+			yyerror("Misssing nodes\n");
+		break;
 	case RELOP :
 		if (!(t->r && t->l))
 			yyerror("Missing nodes\n");
