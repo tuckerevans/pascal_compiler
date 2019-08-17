@@ -58,8 +58,14 @@ ptree *t;
 
 		if (t->r->ret_type == t->l->ret_type)
 			return t->r->ret_type;
-		else
-			yyerror("Misssing nodes\n");
+		else {
+			snprintf(buf, 100, "Mismached types: "
+					"Type %s "
+					"cannot be used with type %s\n",
+					pretty_type(t->r->ret_type),
+					pretty_type(t->l->ret_type));
+			yyerror(buf);
+		}
 		break;
 	case RELOP :
 		if (!(t->r && t->l))
@@ -81,7 +87,6 @@ ptree *t;
 	case RNUM:
 		return REAL;
 	case ASSIGNOP:
-		fprintf(stderr, "HERE\n");
 		if (!(t->r && t->l && t->r->attr.nval))
 			yyerror("Incomplete parse tree\n");
 

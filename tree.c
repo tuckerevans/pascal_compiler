@@ -87,7 +87,6 @@ void set_ret_type(t)
 ptree *t;
 {
 	if (!t){
-		fprintf(stderr, "TEST\n");
 		return;
 	}
 
