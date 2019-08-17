@@ -12,6 +12,7 @@ typedef struct parse_tree {
 			      MULOP: MUL DIV
 		*/
 	} attr;
+	int ret_type;
 	struct parse_tree *l, *r;
 } ptree;
 
@@ -25,5 +26,6 @@ ptree* mkrnum(float);
 ptree* mkop(int, int, ptree*, ptree*);
 
 void update_type_info(ptree*, int);
+void set_ret_type(ptree*);
 
 #endif

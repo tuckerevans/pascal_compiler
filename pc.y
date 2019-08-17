@@ -1,6 +1,7 @@
 %{
 #include <stdlib.h>
 #include <stddef.h>
+#include <assert.h>
 
 #include "node.h"
 #include "scope.h"
@@ -92,6 +93,7 @@ program
 	compound_statement
 	'.'
 	{
+		set_ret_type($9);
 		print_tree($9);
 	}
 ;
@@ -158,6 +160,7 @@ sub_prog_declaration
 	 sub_prog_declarations
 	 compound_statement
 	{
+		set_ret_type($4);
 		print_tree($4);
 		pop_scope(&cur_scope);
 	}

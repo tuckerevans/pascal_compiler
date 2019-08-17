@@ -5,4 +5,6 @@ void check_id(scope*, char*);
 
 node* check_exists(scope*, char*);
 
+int check_ret_type(ptree*);
+
 #endif
