@@ -82,7 +82,7 @@ ptree *t;
 			yyerror(buf);
 		break;
 	case NOT:
-		if (t->ret_type == BOOL)
+		if (t->l && t->l->ret_type == BOOL)
 			return BOOL;
 		yyerror("NOT needs bool input\n");
 		break;
