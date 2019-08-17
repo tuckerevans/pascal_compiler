@@ -74,7 +74,12 @@ ptree *t;
 		if (t->r->ret_type == t->l->ret_type)
 			return BOOL;
 		else
-			yyerror("Misssing nodes\n");
+			snprintf(buf, 100, "Mismached types: "
+					"Type %s "
+					"cannot be compared to type %s\n",
+					pretty_type(t->r->ret_type),
+					pretty_type(t->l->ret_type));
+			yyerror(buf);
 		break;
 	case NOT:
 		if (t->ret_type == BOOL)
@@ -82,7 +87,6 @@ ptree *t;
 		yyerror("NOT needs bool input\n");
 		break;
 	case INUM:
-		printf("INUM: %d", t->attr.ival);
 		return INT;
 	case RNUM:
 		return REAL;
