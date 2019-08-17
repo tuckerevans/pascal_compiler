@@ -258,6 +258,10 @@ statement
 		/*TODO design tree structure for FOR loops*/
 		$$ = NULL;
 	}
+	| expr
+	{
+		$$ = $1;
+	}
 ;
 
 TD: TO | DT;
