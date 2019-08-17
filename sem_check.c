@@ -42,7 +42,7 @@ ptree *t;
 	int type;
 
 	if (!t)
-	printf("TYPE: %d\n", t->type);
+		fprintf(stderr, "TYPE: %d\n", t->type);
 
 	switch (t->type) {
 	case ID:
@@ -91,10 +91,10 @@ ptree *t;
 	case RNUM:
 		return REAL;
 	case ASSIGNOP:
-		if (!(t->r && t->l && t->r->attr.nval))
+		if (!(t->r && t->l))
 			yyerror("Incomplete parse tree\n");
 
-		if (t->l->attr.nval->var_type == t->r->ret_type)
+		if (t->l->ret_type == t->r->ret_type)
 			return 0;
 		else {
 			snprintf(buf, 100, "Mismached types: "
@@ -112,9 +112,16 @@ ptree *t;
 		if (!(t->r && t->l && t->l->attr.nval))
 			yyerror("Incorrect Array Access\n");
 
+		if (t->r->ret_type != INT) {
+			snprintf(buf, 100, "Cannot access array"
+					"with type %s\n",
+					pretty_type(t->r->ret_type));
+			yyerror(buf);
+		}
+
 		type = t->l->attr.nval -> var_type;
 		if (type == ARRAY - INT || type == ARRAY - REAL)
-			return 0;
+			return ARRAY - type;
 		break;
 	default:
 		return -200;

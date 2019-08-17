@@ -277,6 +277,7 @@ var
 		tmp = scope_safe_search(cur_scope, $1);
 
 		$$ = mktree(ARRAY_ACCESS, mkid(tmp), $3);
+		$$->attr.nval = $$->l->attr.nval;
 	}
 ;
 
