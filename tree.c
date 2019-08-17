@@ -5,6 +5,8 @@
 
 #include "node.h"
 #include "tree.h"
+#include "scope.h"
+#include "sem_check.h"
 #include "y.tab.h"
 #include "pc.h"
 

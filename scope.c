@@ -5,6 +5,7 @@
 
 #include "node.h"
 #include "scope.h"
+#include "pc.h"
 
 scope* mkscope()
 {

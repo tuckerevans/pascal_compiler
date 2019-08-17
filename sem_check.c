@@ -123,12 +123,19 @@ ptree *t;
 		if (type == ARRAY - INT || type == ARRAY - REAL)
 			return ARRAY - type;
 		break;
+	case IF:
+		if (!(t->r && t->l))
+			yyerror("Incomplete parse tree\n");
+
+		if (t->l->ret_type != BOOL)
+			yyerror("If condition must be of type BOOL\n");
+		return 0;
+
 	default:
 		return -200;
 		snprintf(buf, 101, "Unknown tree node: %d...\n", t->type);
 		yyerror(buf);
 	}
-
 
 	return -1;
 
