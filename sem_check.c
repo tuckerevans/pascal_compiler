@@ -1,12 +1,10 @@
+#include "sem_check.h"
+
 #include <assert.h>
 #include <stdio.h>
 
-#include "node.h"
-#include "scope.h"
-#include "tree.h"
 #include "y.tab.h"
 #include "pc.h"
-#include "sem_check.h"
 
 void check_id(s, n)
 scope *s;

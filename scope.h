@@ -1,6 +1,8 @@
 #ifndef SCOPE_H
 #define SCOPE_H
 
+#include "node.h"
+
 #define HASH_SIZE 211
 
 typedef struct hash {

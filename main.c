@@ -1,3 +1,5 @@
+#include "pc.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -5,7 +7,6 @@
 #include "node.h"
 #include "scope.h"
 #include "y.tab.h"
-#include "pc.h"
 
 extern char *yytext;
 extern int line_num;

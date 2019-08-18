@@ -1,14 +1,14 @@
+#include "tree.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
 
-#include "node.h"
-#include "tree.h"
-#include "scope.h"
-#include "sem_check.h"
 #include "y.tab.h"
+#include "scope.h"
 #include "pc.h"
+#include "sem_check.h"
 
 /* parse tree funcs */
 ptree* mktree(type, l, r)

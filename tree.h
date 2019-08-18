@@ -1,6 +1,8 @@
 #ifndef TREE_H
 #define TREE_H
 
+#include "node.h"
+
 typedef struct parse_tree {
 	int type;
 	union {
