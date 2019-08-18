@@ -138,13 +138,16 @@ ptree *t;
 			return ARRAY - type;
 		break;
 	case IF:
+	case WHILE:
 		if (!(t->r && t->l))
 			yyerror("Incomplete parse tree\n");
 
 		if (t->l->ret_type != BOOL)
 			yyerror("If condition must be of type BOOL\n");
 		return 0;
-
+	case FOR:
+		/*TODO add for type checking after parsing is correct*/
+		break;
 	default:
 		return -200;
 		snprintf(buf, 101, "Unknown tree node: %d...\n", t->type);
