@@ -164,6 +164,9 @@ int spaces;
 		case IF:
 			fprintf(stderr, "[IF]");
 			break;
+		case WHILE:
+			fprintf(stderr, "[WHILE]");
+			break;
 		case THEN:
 			fprintf(stderr, "[THEN]");
 			break;
