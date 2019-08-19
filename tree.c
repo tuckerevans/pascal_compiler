@@ -164,15 +164,24 @@ int spaces;
 		case IF:
 			fprintf(stderr, "[IF]");
 			break;
-		case WHILE:
-			fprintf(stderr, "[WHILE]");
-			break;
 		case THEN:
 			fprintf(stderr, "[THEN]");
 			break;
-			default:
-				fprintf(stderr, "\t%d", t->type);
-				yyerror("Error in tree_print");
+		case WHILE:
+			fprintf(stderr, "[WHILE]");
+			break;
+		case FOR:
+			fprintf(stderr, "[FOR]");
+			break;
+		case TO:
+			fprintf(stderr, "[TO]");
+			break;
+		case DT:
+			fprintf(stderr, "[DOWN-TO]");
+			break;
+		default:
+			fprintf(stderr, "\t%d", t->type);
+			yyerror("Error in tree_print");
 		}
 		fprintf(stderr," %d\n", t->ret_type);
 		aux_tree_print(t->l, spaces + 2);

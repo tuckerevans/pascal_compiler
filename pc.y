@@ -84,6 +84,8 @@ extern scope *cur_scope;
 %type <ival> type
 %type <ival> standard_type
 
+%type <ival> TD
+
 %%
 
 program
@@ -255,8 +257,19 @@ statement
 	}
 	|FOR var ASSIGNOP expr TD expr DO statement
 	{
-		/*TODO design tree structure for FOR loops*/
-		$$ = NULL;
+		/*
+		              FOR
+		             /   \
+		          TD       STATEMENT
+		        /    \
+		ASSIGNOP       INUM
+		*/
+		ptree *tmp;
+
+		tmp = mktree(ASSIGNOP, $2, $4);
+		tmp = mktree($5, tmp, $6); //$5 is TD
+
+		$$ = mktree(FOR, tmp, $8);
 	}
 	| expr
 	{
@@ -264,7 +277,16 @@ statement
 	}
 ;
 
-TD: TO | DT;
+TD
+	:TO
+	{
+		$$ = TO;
+	}
+	|DT
+	{
+		$$ = DT;
+	}
+;
 
 var
 	:ID
