@@ -174,37 +174,37 @@ id	[A-Za-z][A-Za-z0-9_]*
 
 "+" {
 	yylval.opval = ADD;
-	debug_print(RELOP, &yylval);
+	debug_print(ADDOP, &yylval);
 	return ADDOP;
 }
 
 "-" {
 	yylval.opval = SUB;
-	debug_print(RELOP, &yylval);
+	debug_print(ADDOP, &yylval);
 	return ADDOP;
 }
 
 "or" {
 	yylval.opval =  OR;
-	debug_print(RELOP, &yylval);
+	debug_print(ADDOP, &yylval);
 	return ADDOP;
 }
 
 "*" {
 	yylval.opval = MUL;
-	debug_print(RELOP, &yylval);
+	debug_print(MULOP, &yylval);
 	return MULOP;
 }
 
 "/" {
 	yylval.opval = DIV;
-	debug_print(RELOP, &yylval);
+	debug_print(MULOP, &yylval);
 	return MULOP;
 }
 
 "and" {
 	yylval.opval = AND;
-	debug_print(RELOP, &yylval);
+	debug_print(MULOP, &yylval);
 	return MULOP;
 }
 

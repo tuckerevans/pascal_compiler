@@ -1,9 +1,9 @@
+#include "node.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
-
-#include "node.h"
 
 /*constructor*/
 node* mknode(str)
@@ -14,6 +14,8 @@ char *str;
 
 	p->name = strdup(str);
 	p->next = NULL;
+
+	p->var_type = -1;
 
 	return p;
 }

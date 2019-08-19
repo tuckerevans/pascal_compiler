@@ -1,10 +1,12 @@
+#include "scope.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
 
-#include "node.h"
-#include "scope.h"
+#include "pc.h"
+
 
 scope* mkscope()
 {
@@ -138,9 +140,14 @@ scope *s;
 {
 	int i;
 	node * tmp;
+
+	fprintf(stderr, "\n\nSCOPE\n"
+	"==========================================================\n");
+
 	for (i = 0; i < HASH_SIZE; i++) {
 		for( tmp=s->table[i]; tmp; tmp = tmp->next) {
-			fprintf(stderr, "\t%s\n", tmp->name);
+			fprintf(stderr, "\t%s:%s\n", tmp->name, 
+				pretty_type(tmp->var_type));
 		}
 	}
 }

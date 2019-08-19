@@ -1,6 +1,8 @@
 #ifndef TREE_H
 #define TREE_H
 
+#include "node.h"
+
 typedef struct parse_tree {
 	int type;
 	union {
@@ -12,6 +14,7 @@ typedef struct parse_tree {
 			      MULOP: MUL DIV
 		*/
 	} attr;
+	int ret_type;
 	struct parse_tree *l, *r;
 } ptree;
 
@@ -25,6 +28,7 @@ ptree* mkrnum(float);
 ptree* mkop(int, int, ptree*, ptree*);
 
 void update_type_info(ptree*, int);
+void set_ret_type(ptree*);
 
 void free_tree(ptree*);
 
