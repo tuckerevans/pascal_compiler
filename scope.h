@@ -22,7 +22,7 @@ void push_scope(scope**);
 node* scope_insert(scope*, char*);
 node* scope_search_all(scope*, char*);
 node* scope_search(scope*, char*);
-node* scope_safe_search_all(scope*, char*);
+node* scope_safe_search(scope*, char*);
 
 /*hash function*/
 int hashpjw(char*);
