@@ -65,20 +65,19 @@ ptree *t;
 						"Cannot use boolean "
 						"operator on type %s\n",
 						pretty_type(type));
-				yyerror(buf);
+				break;
 			}
 		}
 
 		if (t->r->ret_type == t->l->ret_type)
 			return t->r->ret_type;
-		else {
+		else
 			snprintf(buf, 100, "Mismached types: "
 					"Type %s "
 					"cannot be used with type %s\n",
 					pretty_type(t->r->ret_type),
 					pretty_type(t->l->ret_type));
-			yyerror(buf);
-		}
+
 		break;
 	case RELOP :
 		if (!(t->r && t->l))
@@ -91,7 +90,6 @@ ptree *t;
 					"cannot be compared to type %s\n",
 					pretty_type(t->r->ret_type),
 					pretty_type(t->l->ret_type));
-			yyerror(buf);
 		break;
 	case NOT:
 		if (t->l && t->l->ret_type == BOOL)
@@ -108,15 +106,14 @@ ptree *t;
 
 		if (t->l->ret_type == t->r->ret_type)
 			return 1;
-		else {
+		else
 			snprintf(buf, 100, "Mismached types: "
 					"Cannot assign type %s "
 					"to variable \"%s\" of type %s\n",
 					pretty_type(t->r->ret_type),
 					t->l->attr.nval->name,
 					pretty_type(t->l->attr.nval->var_type));
-			yyerror(buf);
-		}
+
 
 
 		break;
@@ -128,7 +125,7 @@ ptree *t;
 			snprintf(buf, 100, "Cannot access array"
 					"with type %s\n",
 					pretty_type(t->r->ret_type));
-			yyerror(buf);
+			break;
 		}
 
 		type = t->l->attr.nval -> var_type;
@@ -149,9 +146,9 @@ ptree *t;
 	default:
 		return -200;
 		snprintf(buf, 100, "Unknown tree node: %d...\n", t->type);
-		yyerror(buf);
 	}
 
+	yyerror(buf);
 	return -1;
 
 }
