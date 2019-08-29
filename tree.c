@@ -21,6 +21,7 @@ ptree *l, *r;
 	t->type = type;
 	t->l = l;
 	t->r = r;
+	t->ret_type = 0;
 
 	return t;
 }
@@ -90,10 +91,12 @@ ptree *t;
 {
 	if (!t)
 		return;
-	
 
-	set_ret_type(t->l);
-	set_ret_type(t->r);
+	if (! (t->l && t->l->ret_type == 1))
+		set_ret_type(t->l);
+	if (! (t->r && t->r->ret_type == 1))
+		set_ret_type(t->r);
+
 	t->ret_type = check_ret_type(t);
 
 	return;

@@ -107,7 +107,7 @@ ptree *t;
 			yyerror("Incomplete parse tree\n");
 
 		if (t->l->ret_type == t->r->ret_type)
-			return 0;
+			return 1;
 		else {
 			snprintf(buf, 100, "Mismached types: "
 					"Cannot assign type %s "
@@ -142,13 +142,13 @@ ptree *t;
 
 		if (t->l->ret_type != BOOL)
 			yyerror("If condition must be of type BOOL\n");
-		return 0;
+		return 1;
 	case FOR:
 		/*TODO add for type checking after parsing is correct*/
 		break;
 	default:
 		return -200;
-		snprintf(buf, 101, "Unknown tree node: %d...\n", t->type);
+		snprintf(buf, 100, "Unknown tree node: %d...\n", t->type);
 		yyerror(buf);
 	}
 
