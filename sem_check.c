@@ -141,7 +141,27 @@ ptree *t;
 			yyerror("If condition must be of type BOOL\n");
 		return 1;
 	case FOR:
-		/*TODO add for type checking after parsing is correct*/
+		/*
+		                  FOR (0)
+		                 /   \
+		            TD(0)     STATEMENT(0)
+		           /     \
+		ASSIGNOP(0)       INUM(INT)
+		*/
+		if (!(t->r && t->l))
+			yyerror("Missing nodes\n");
+		if (t->l->ret_type == 1 && t->r->ret_type == 1)
+			return 1;
+		snprintf(buf, 100, "Incorrect types in for statement...\n");
+		break;
+	case TO:
+	case DT:
+		if (!(t->r && t->l))
+			yyerror("Missing nodes\n");
+
+		if (t->l->ret_type == 1 && t->r->ret_type == INT)
+			return 1;
+		snprintf(buf, 100, "Incorrect types HERE...\n");
 		break;
 	default:
 		return -200;
