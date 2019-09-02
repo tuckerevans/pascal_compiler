@@ -54,7 +54,7 @@ ptree *t;
 		if (!(t->r && t->l))
 			yyerror("Missing nodes\n");
 
-		if (t->attr.opval == ADD || t->attr.opval == OR) {
+		if (t->attr.opval == AND || t->attr.opval == OR) {
 			if(t->l->ret_type == BOOL && t->r->ret_type ==BOOL)
 				return BOOL;
 			else {
@@ -162,6 +162,8 @@ ptree *t;
 		if (t->l->ret_type == 1 && t->r->ret_type == INT)
 			return 1;
 		snprintf(buf, 100, "Incorrect types HERE...\n");
+	case SUB:
+		return t->l->ret_type;
 		break;
 	default:
 		return -200;

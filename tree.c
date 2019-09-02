@@ -182,6 +182,9 @@ int spaces;
 		case DT:
 			fprintf(stderr, "[DOWN-TO]");
 			break;
+		case SUB:
+			fprintf(stderr, "[SUB]");
+			break;
 		default:
 			fprintf(stderr, "\t%d", t->type);
 			yyerror("Error in tree_print");

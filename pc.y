@@ -402,5 +402,11 @@ factor
 	{
 		$$ = mktree(NOT, $2, NULL);
 	}
+	|ADDOP factor{
+		if ($1 != SUB)
+			yyerror("SUB NOT CORRECT\n");
+		else
+			$$ = mktree(SUB, $2, NULL);
+	}
 ;
 
