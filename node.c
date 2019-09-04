@@ -1,9 +1,9 @@
+#include "node.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
-
-#include "node.h"
 
 /*constructor*/
 node* mknode(str)

@@ -1,12 +1,14 @@
+#include "tree.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
 
-#include "node.h"
-#include "tree.h"
 #include "y.tab.h"
+#include "scope.h"
 #include "pc.h"
+#include "sem_check.h"
 
 /* parse tree funcs */
 ptree* mktree(type, l, r)
@@ -19,6 +21,7 @@ ptree *l, *r;
 	t->type = type;
 	t->l = l;
 	t->r = r;
+	t->ret_type = 0;
 
 	return t;
 }
@@ -83,6 +86,22 @@ ptree *list;
 	}
 }
 
+void set_ret_type(t)
+ptree *t;
+{
+	if (!t)
+		return;
+
+	if (! (t->l && t->l->ret_type == 1))
+		set_ret_type(t->l);
+	if (! (t->r && t->r->ret_type == 1))
+		set_ret_type(t->r);
+
+	t->ret_type = check_ret_type(t);
+
+	return;
+}
+
 
 /*PRINT FUNCS*/
 
@@ -106,51 +125,71 @@ int spaces;
 		for (i = 0; i < spaces; i++)
 			fprintf(stderr," ");
 		switch (t->type) {
-		
-			case ADDOP:
-				fprintf(stderr, "[ADDOP]");
-				break;
-			case MULOP:
-				fprintf(stderr, "[MULOP]");
-				break;
-			case RELOP:
-				fprintf(stderr, "[RELOP]");
-				break;
-			case NOT:
-				fprintf(stderr, "[NOT]");
-				break;
-			case ARRAY_ACCESS:
-				fprintf(stderr, "[ARRAY ACCESS]");
-				break;
-			case LIST:
-				fprintf(stderr, "[LIST]");
-				break;
-			case ID:
-				if (t->r && t->r->attr.nval)
-					fprintf(stderr, "[ID: %s %s]",
-						t->r->attr.nval->name,
-						pretty_type(
-							t->attr.nval->var_type));
-				else
-					fprintf(stderr, "[ID: %s %s]",
-						t->attr.nval->name,
-						pretty_type(
-							t->attr.nval->var_type));
-				break;
-			case INUM:
-				fprintf(stderr, "[INUM: %d]", t->attr.ival);
-				break;
-			case RNUM:
-				fprintf(stderr, "[RNUM: %f]", t->attr.rval);
-				break;
-			case ASSIGNOP:
-				fprintf(stderr, "[ASSIGN]");
-				break;
-			default:
-				fprintf(stderr, "\t%d", t->type);
-				yyerror("Error in tree_print");
+		case ADDOP:
+			fprintf(stderr, "[ADDOP]");
+			break;
+		case MULOP:
+			fprintf(stderr, "[MULOP]");
+			break;
+		case RELOP:
+			fprintf(stderr, "[RELOP]");
+			break;
+		case NOT:
+			fprintf(stderr, "[NOT]");
+			break;
+		case ARRAY_ACCESS:
+			fprintf(stderr, "[ARRAY ACCESS]");
+			break;
+		case LIST:
+			fprintf(stderr, "[LIST]");
+			break;
+		case ID:
+			if (t->r && t->r->attr.nval)
+				fprintf(stderr, "[ID: %s %s]",
+					t->r->attr.nval->name,
+					pretty_type(
+						t->attr.nval->var_type));
+			else
+				fprintf(stderr, "[ID: %s %s]",
+					t->attr.nval->name,
+					pretty_type(
+						t->attr.nval->var_type));
+			break;
+		case INUM:
+			fprintf(stderr, "[INUM: %d]", t->attr.ival);
+			break;
+		case RNUM:
+			fprintf(stderr, "[RNUM: %f]", t->attr.rval);
+			break;
+		case ASSIGNOP:
+			fprintf(stderr, "[ASSIGN]");
+			break;
+		case IF:
+			fprintf(stderr, "[IF]");
+			break;
+		case THEN:
+			fprintf(stderr, "[THEN]");
+			break;
+		case WHILE:
+			fprintf(stderr, "[WHILE]");
+			break;
+		case FOR:
+			fprintf(stderr, "[FOR]");
+			break;
+		case TO:
+			fprintf(stderr, "[TO]");
+			break;
+		case DT:
+			fprintf(stderr, "[DOWN-TO]");
+			break;
+		case SUB:
+			fprintf(stderr, "[SUB]");
+			break;
+		default:
+			fprintf(stderr, "\t%d", t->type);
+			yyerror("Error in tree_print");
 		}
-		fprintf(stderr,"\n");
+		fprintf(stderr," %d\n", t->ret_type);
 		aux_tree_print(t->l, spaces + 2);
 		fprintf(stderr,"\n");
 		aux_tree_print(t->r, spaces + 2);

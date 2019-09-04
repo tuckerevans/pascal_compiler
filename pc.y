@@ -1,6 +1,7 @@
 %{
 #include <stdlib.h>
 #include <stddef.h>
+#include <assert.h>
 
 #include "node.h"
 #include "scope.h"
@@ -83,6 +84,8 @@ extern scope *cur_scope;
 %type <ival> type
 %type <ival> standard_type
 
+%type <ival> TD
+
 %%
 
 program
@@ -92,6 +95,7 @@ program
 	compound_statement
 	'.'
 	{
+		set_ret_type($9);
 		print_tree($9);
 	}
 ;
@@ -158,6 +162,7 @@ sub_prog_declaration
 	 sub_prog_declarations
 	 compound_statement
 	{
+		set_ret_type($4);
 		print_tree($4);
 		pop_scope(&cur_scope);
 	}
@@ -262,12 +267,36 @@ statement
 	}
 	|FOR var ASSIGNOP expr TD expr DO statement
 	{
-		/*TODO design tree structure for FOR loops*/
-		$$ = NULL;
+		/*
+		              FOR
+		             /   \
+		          TD       STATEMENT
+		        /    \
+		ASSIGNOP       INUM
+		*/
+		ptree *tmp;
+
+		tmp = mktree(ASSIGNOP, $2, $4);
+		tmp = mktree($5, tmp, $6); //$5 is TD
+
+		$$ = mktree(FOR, tmp, $8);
+	}
+	| expr
+	{
+		$$ = $1;
 	}
 ;
 
-TD: TO | DT;
+TD
+	:TO
+	{
+		$$ = TO;
+	}
+	|DT
+	{
+		$$ = DT;
+	}
+;
 
 var
 	:ID
@@ -280,6 +309,7 @@ var
 		tmp = scope_safe_search(cur_scope, $1);
 
 		$$ = mktree(ARRAY_ACCESS, mkid(tmp), $3);
+		$$->attr.nval = $$->l->attr.nval;
 	}
 ;
 
@@ -381,6 +411,12 @@ factor
 	|NOT factor
 	{
 		$$ = mktree(NOT, $2, NULL);
+	}
+	|ADDOP factor{
+		if ($1 != SUB)
+			yyerror("SUB NOT CORRECT\n");
+		else
+			$$ = mktree(SUB, $2, NULL);
 	}
 ;
 

@@ -1,3 +1,5 @@
+#include "pc.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -5,7 +7,6 @@
 #include "node.h"
 #include "scope.h"
 #include "y.tab.h"
-#include "pc.h"
 
 extern char *yytext;
 extern int line_num;
@@ -129,15 +130,65 @@ int yyerror(msg)
 char* msg;
 {
 	fprintf(stderr, "\nError, line %d: %s\n", line_num, msg);
-#ifdef DEBUG
-	fprintf(stderr, "%s\n", yytext);
 	exit(1);
-#endif
 	return 0;
 }
 
 int main()
 {
+#ifdef DEBUG_TYPES
+	printf(
+		"\nPROG\t\t%d\n"
+		"VAR\t\t%d\n"
+		"PROC\t\t%d\n"
+		"FUNC\t\t%d\n"
+		"BEG\t\t%d\n"
+		"END\t\t%d\n"
+		"ID\t\t%d\n"
+		"ADDOP\t\t%d\n"
+		"MULOP\t\t%d\n"
+		"RELOP\t\t%d\n"
+		"ASSIGNOP\t\t%d\n"
+		"ADD\t\t%d\n"
+		"SUB\t\t%d\n"
+		"MUL\t\t%d\n"
+		"DIV\t\t%d\n"
+		"NOT\t\t%d\n"
+		"AND\t\t%d\n"
+		"OR\t\t%d\n"
+		"EQ\t\t%d\n"
+		"NE\t\t%d\n"
+		"LT\t\t%d\n"
+		"LE\t\t%d\n"
+		"GT\t\t%d\n"
+		"GE\t\t%d\n"
+		"INUM\t\t%d\n"
+		"RNUM\t\t%d\n"
+		"INT\t\t%d\n"
+		"REAL\t\t%d\n"
+		"BOOL\t\t%d\n"
+		"ARRAY\t\t%d\n"
+		"OF\t\t%d\n"
+		"DOTS\t\t%d\n"
+		"IF\t\t%d\n"
+		"ELSE\t\t%d\n"
+		"THEN\t\t%d\n"
+		"WHILE\t\t%d\n"
+		"DO\t\t%d\n"
+		"FOR\t\t%d\n"
+		"TO\t\t%d\n"
+		"DT\t\t%d\n"
+		"FCALL\t\t%d\n"
+		"PCALL\t\t%d\n"
+		"ARRAY_ACCESS\t\t%d\n"
+		"LIST\t\t%d\n",
+
+		PROG, VAR, PROC, FUNC, BEG, END, ID, ADDOP, MULOP, RELOP, ASSIGNOP, ADD,
+		SUB, MUL, DIV, NOT, AND, OR, EQ, NE, LT, LE, GT, GE, INUM, RNUM, INT, REAL,
+		BOOL, ARRAY, OF, DOTS, IF, ELSE, THEN, WHILE, DO, FOR, TO, DT, FCALL, PCALL,
+		ARRAY_ACCESS, LIST);
+#endif
+
 	cur_scope = mkscope();
 	assert(cur_scope);
 
