@@ -195,8 +195,20 @@ sub_prog_head
 	}
 	|PROC ID arguments ';'
 	{
+		node *tmp;
+		int i = 0;
+
 		check_id(cur_scope->prev, $2);
-		scope_insert(cur_scope->prev, $2);
+		tmp = scope_insert(cur_scope->prev, $2);
+
+		i = count_args($3);
+
+		tmp->func_info = malloc(sizeof(struct fi));
+		assert(tmp->func_info);
+		tmp->func_info->argc = i;
+		assert(tmp->func_info->argv = malloc(i * sizeof(int)));
+
+		assert(!set_func_types($3, tmp->func_info->argv, i));
 	}
 ;
 
