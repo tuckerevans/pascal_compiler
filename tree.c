@@ -144,16 +144,10 @@ int spaces;
 			fprintf(stderr, "[LIST]");
 			break;
 		case ID:
-			if (t->r && t->r->attr.nval)
-				fprintf(stderr, "[ID: %s %s]",
-					t->r->attr.nval->name,
-					pretty_type(
-						t->attr.nval->var_type));
-			else
-				fprintf(stderr, "[ID: %s %s]",
-					t->attr.nval->name,
-					pretty_type(
-						t->attr.nval->var_type));
+			fprintf(stderr, "[ID: %s %s, ",
+				t->attr.nval->name,
+				pretty_type(
+					t->attr.nval->var_type));
 			break;
 		case INUM:
 			fprintf(stderr, "[INUM: %d]", t->attr.ival);
