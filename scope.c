@@ -146,8 +146,13 @@ scope *s;
 
 	for (i = 0; i < HASH_SIZE; i++) {
 		for( tmp=s->table[i]; tmp; tmp = tmp->next) {
-			fprintf(stderr, "\t%s:%s\n", tmp->name, 
+			fprintf(stderr, "\t%s:%s\t", tmp->name,
 				pretty_type(tmp->var_type));
+			if (tmp->func_info && tmp->func_info->argv) {
+			for (int i = 0; i < tmp->func_info->argc; i++)
+					fprintf(stderr, " %s ", pretty_type(tmp->func_info->argv[i]));
+			}
+			fprintf(stderr, "\n");
 		}
 	}
 }

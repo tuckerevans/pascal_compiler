@@ -162,6 +162,29 @@ ptree *t;
 	return l + r;
 }
 
+int set_func_types(t, nxt, size)
+ptree *t;
+int size, *nxt;
+{
+	int tmp;
+
+	if (!t)
+		return size;
+
+	if (t->type == LIST){
+		tmp = set_func_types(t->l, nxt, size);
+		for (;size > tmp; --size) ++nxt;
+		size = set_func_types(t->r, nxt, size);
+	} else if (t->type == ID){
+		if (--size == -1)
+			yyerror("VARIABLE COUNT CHANGED!!!\n");
+
+		*nxt = t->attr.nval->var_type;
+		return size;
+	}
+	return size;
+}
+
 int main()
 {
 #ifdef DEBUG_TYPES

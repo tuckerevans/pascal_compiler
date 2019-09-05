@@ -188,6 +188,9 @@ sub_prog_head
 		tmp->func_info->argc = i;
 		assert(tmp->func_info->argv = malloc(i * sizeof(int)));
 
+		print_tree($3);
+		assert(!set_func_types($3, tmp->func_info->argv, i));
+
 		tmp->var_type = $5;
 
 		cur_scope->ret_var = scope_insert(cur_scope, $2);

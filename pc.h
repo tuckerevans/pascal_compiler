@@ -9,8 +9,9 @@ char* pretty_type(int);
 void debug_print(int, union YYSTYPE*);
 
 int yyerror(char*);
-#endif
 
 int count_args(ptree*);
+int set_func_types(ptree*, int*, int);
+#endif
 
 #define DEBUG
