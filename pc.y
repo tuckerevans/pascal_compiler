@@ -178,10 +178,7 @@ sub_prog_head
 		check_id(cur_scope->prev, $2);
 		tmp = scope_insert(cur_scope->prev, $2);
 
-		if ($3->type == ID)
-			i = 1;
-		else
-			i = count_args($3);
+		i = count_args($3);
 
 		tmp->func_info = malloc(sizeof(struct fi));
 		assert(tmp->func_info);

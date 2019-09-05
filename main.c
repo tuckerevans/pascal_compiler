@@ -139,27 +139,19 @@ ptree *t;
 {
 	int r, l;
 
-	if (t->r && t->r->type == LIST)
+	if (!t)
+		return 0;
+
+	if (t->type == LIST){
 		r = count_args(t->r);
-	else if (t->r && t->r->type == ID)
-		r = 1;
-	else {
-		char buf[100];
-		snprintf(buf, 100, "COUNT ARGS1: %d\n",(t->r));
-		yyerror(buf);
-	}
-
-	if (t->l && t->l->type == LIST)
 		l = count_args(t->l);
-	else if (t->l && t->l->type == ID)
-		l = 1;
-	else{
-		char buf[100];
-		snprintf(buf, 100, "COUNT ARGS2: %d\n", (t->l));
-		yyerror(buf);
+	} else if (t->type == ID) {
+		return 1;
+	} else {
+		yyerror("NOT A PARAMETER LIST\n");
 	}
 
-	return l + r;
+	return r + l;
 }
 
 int set_func_types(t, nxt, size)
