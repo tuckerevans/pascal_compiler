@@ -173,17 +173,22 @@ sub_prog_head
 	:FUNC ID arguments ':' standard_type ';'
 	{
 		node *tmp;
-		int i = -1;
+		int i = 0;
 
 		check_id(cur_scope->prev, $2);
 		tmp = scope_insert(cur_scope->prev, $2);
 
-		assert(tmp->func_info = malloc(sizeof struct fi));
-		/*TODO add count of parameters*/
-		tmp->func_info->argc = i;
-		assert(tmp->func_info->argv = malloc(i * sizeof int));
+		if ($3->type == ID)
+			i = 1;
+		else
+			i = count_args($3);
 
-		tmp->var_type = $5
+		tmp->func_info = malloc(sizeof(struct fi));
+		assert(tmp->func_info);
+		tmp->func_info->argc = i;
+		assert(tmp->func_info->argv = malloc(i * sizeof(int)));
+
+		tmp->var_type = $5;
 
 		cur_scope->ret_var = scope_insert(cur_scope, $2);
 		cur_scope->ret_var->var_type = $5;

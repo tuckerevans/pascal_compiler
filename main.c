@@ -134,6 +134,34 @@ char* msg;
 	return 0;
 }
 
+int count_args(t)
+ptree *t;
+{
+	int r, l;
+
+	if (t->r && t->r->type == LIST)
+		r = count_args(t->r);
+	else if (t->r && t->r->type == ID)
+		r = 1;
+	else {
+		char buf[100];
+		snprintf(buf, 100, "COUNT ARGS1: %d\n",(t->r));
+		yyerror(buf);
+	}
+
+	if (t->l && t->l->type == LIST)
+		l = count_args(t->l);
+	else if (t->l && t->l->type == ID)
+		l = 1;
+	else{
+		char buf[100];
+		snprintf(buf, 100, "COUNT ARGS2: %d\n", (t->l));
+		yyerror(buf);
+	}
+
+	return l + r;
+}
+
 int main()
 {
 #ifdef DEBUG_TYPES
