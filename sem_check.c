@@ -2,6 +2,8 @@
 
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "y.tab.h"
 #include "pc.h"
@@ -113,9 +115,6 @@ ptree *t;
 					pretty_type(t->r->ret_type),
 					t->l->attr.nval->name,
 					pretty_type(t->l->attr.nval->var_type));
-
-
-
 		break;
 	case ARRAY_ACCESS:
 		if (!(t->r && t->l && t->l->attr.nval))
@@ -165,6 +164,10 @@ ptree *t;
 	case SUB:
 		return t->l->ret_type;
 		break;
+	case PCALL:
+	case FCALL:
+		if (t->l && t->l->attr.nval)
+			return t->l->attr.nval->var_type;
 	default:
 		return -200;
 		snprintf(buf, 100, "Unknown tree node: %d...\n", t->type);
@@ -175,3 +178,26 @@ ptree *t;
 
 }
 
+void check_call(t)
+ptree *t;
+{
+	int argc, *argv;
+
+	print_tree(t);
+	if (!(t && t->attr.nval && t->attr.nval->func_info))
+		yyerror("Tree is not a function call\n");
+
+	argc = t->l->attr.nval->func_info->argc;
+	if (t->l->attr.nval->func_info->argc != count_args(t->r))
+		/*TODO add info about expected argument count*/
+		yyerror("Incorrect argument count");
+
+	assert(argv = malloc(sizeof(int) * argc));
+
+	get_call_types(t->r, argv, argc);
+
+	if (memcmp(argv, t->l->attr.nval->func_info->argv, argc * sizeof(int)))
+		/*TODO add info on which argument causes error*/
+		yyerror("Incorrect types in fuction arguments");
+
+}

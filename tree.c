@@ -148,6 +148,10 @@ int spaces;
 				t->attr.nval->name,
 				pretty_type(
 					t->attr.nval->var_type));
+			if (t->attr.nval->func_info)
+				fprintf(stderr, "\t %d",
+						t->attr.nval->func_info->argc);
+			fprintf(stderr, "]");
 			break;
 		case INUM:
 			fprintf(stderr, "[INUM: %d]", t->attr.ival);
@@ -179,8 +183,13 @@ int spaces;
 		case SUB:
 			fprintf(stderr, "[SUB]");
 			break;
+		case PCALL:
+			fprintf(stderr,"[P]");
+		case FCALL:
+			fprintf(stderr, "[CALL]");
+			break;
 		default:
-			fprintf(stderr, "\t%d", t->type);
+			fprintf(stderr, "[?: %d]", t->type);
 			yyerror("Error in tree_print");
 		}
 		fprintf(stderr," %d\n", t->ret_type);

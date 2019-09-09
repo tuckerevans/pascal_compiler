@@ -216,7 +216,9 @@ arguments
 	{
 		$$ = $2;
 	}
-	|/*empty*/
+	|/*empty*/{
+		$$ = NULL;
+	}
 ;
 
 param_list
@@ -411,6 +413,7 @@ factor
 
 		tmp = check_exists(cur_scope, $1);
 		$$ = mktree(FCALL, mkid(tmp), $3);
+		check_call($$);
 	}
 	|INUM
 	{
