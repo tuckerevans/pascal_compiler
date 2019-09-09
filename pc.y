@@ -270,6 +270,7 @@ statement
 	|proc_statement
 	{
 		$$ = $1;
+		check_call($$);
 	}
 	|compound_statement
 	{
@@ -346,6 +347,7 @@ proc_statement
 		tmp = check_exists(cur_scope, $1);
 		$$ = mktree(PCALL, mkid(tmp), $3);
 	}
+	/*calls checked with proc_statement*/
 ;
 
 expr_list

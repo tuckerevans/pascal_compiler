@@ -183,9 +183,11 @@ ptree *t;
 {
 	int argc, *argv;
 
-	print_tree(t);
-	if (!(t && t->attr.nval && t->attr.nval->func_info))
+	if (!(t && (t->type == FCALL || t->type == PCALL)))
 		yyerror("Tree is not a function call\n");
+
+	if (!(t->l && t->l->attr.nval && t->l->attr.nval->func_info))
+		yyerror("Incorrect Call Tree\n");
 
 	argc = t->l->attr.nval->func_info->argc;
 	if (t->l->attr.nval->func_info->argc != count_args(t->r))

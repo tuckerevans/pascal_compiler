@@ -22,6 +22,7 @@ ptree *l, *r;
 	t->l = l;
 	t->r = r;
 	t->ret_type = 0;
+	t->attr.nval = 0;
 
 	return t;
 }

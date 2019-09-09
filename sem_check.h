@@ -10,4 +10,6 @@ node* check_exists(scope*, char*);
 
 int check_ret_type(ptree*);
 
+void check_call(ptree*);
+
 #endif
