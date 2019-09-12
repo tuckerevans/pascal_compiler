@@ -81,7 +81,7 @@ extern scope *cur_scope;
 %type <tval> proc_statement
 
 %type <tval> var
-%type <ival> type
+%type <tval> type
 %type <ival> standard_type
 
 %type <ival> TD
@@ -131,11 +131,11 @@ var_declarations
 type
 	:standard_type
 	{
-		$$ = $1;
+		$$ = mktree($1, NULL, NULL);
 	}
 	|ARRAY '[' INUM DOTS INUM ']' OF standard_type
 	{
-		$$ = ARRAY - $8;
+		$$ = mktree(ARRAY - $8, mkinum($3), mkinum($5));
 	}
 ;
 

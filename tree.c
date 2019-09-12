@@ -60,31 +60,51 @@ ptree *l, *r;
 	return p;
 }
 
-void update_type_info(list, type)
-int type;
-ptree *list;
+void update_type_info(list, t)
+ptree *list, *t;
 {
-	assert(list);
+	int type;
+	struct ai *info = NULL;
+	assert(list && t);
+
+	type = t->type;
+	if (type != INT && type != REAL){
+		assert(info = malloc(sizeof(struct ai)));
+		info->size = t->r->attr.ival - t->l->attr.ival;
+		info->start_idx = t->l->attr.ival;
+	}
+
 	if (list->type == ID) {
 		list->attr.nval->var_type = type;
+		if (info)
+			list->attr.nval->array_info = info;
 		return;
 	}
 
 	while (list->r && list->r->type == ID) {
 		/*Set type of right child through list*/
 		list->r->attr.nval->var_type = type;
+		if (info)
+			list->r->attr.nval->array_info = info;
 
 		if (list->l) {
 			if (list->l->type == LIST) {
 				list = list->l;
 				continue; /*Continue down list*/
-			} else if (list->l->type == ID)
+			} else if (list->l->type == ID) {
 				/*Set type of first declared ID
 				    (only left node in LIST)*/
 				list->l->attr.nval->var_type = type;
+				if (info){
+					list->l->attr.nval->array_info = info;
+				}
+			}
 		}
-		return; /*At _end_ of list (did not continue)*/
+		break; /*At _end_ of list (did not continue)*/
 	}
+
+	/*TODO free t. and list?*/
+	return;
 }
 
 void set_ret_type(t)
@@ -188,6 +208,14 @@ int spaces;
 			fprintf(stderr,"[P]");
 		case FCALL:
 			fprintf(stderr, "[CALL]");
+			break;
+		case INT:
+		case REAL:
+			fprintf(stderr, "[STD TYPE]");
+			break;
+		case ARRAY - INT:
+		case ARRAY - REAL:
+			fprintf(stderr, "[ARRAY]");
 			break;
 		default:
 			fprintf(stderr, "[?: %d]", t->type);
