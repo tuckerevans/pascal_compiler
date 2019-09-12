@@ -97,6 +97,10 @@ program
 	{
 		set_ret_type($9);
 		print_tree($9);
+#ifdef DEBUG
+		print_scope(cur_scope);
+#endif
+		pop_scope(&cur_scope);
 	}
 ;
 
@@ -164,6 +168,9 @@ sub_prog_declaration
 	{
 		set_ret_type($4);
 		print_tree($4);
+#ifdef DEBUG
+		print_scope(cur_scope);
+#endif
 		pop_scope(&cur_scope);
 	}
 ;
