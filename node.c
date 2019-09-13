@@ -54,8 +54,21 @@ node *n;
 
 	for(tmp = n; tmp;) {
 		n = tmp->next;
+
+		free(tmp->name);
+		tmp->name = NULL;
+
+		if (tmp->func_info)
+			free(tmp->func_info);
+		tmp->func_info = NULL;
+
+		if (tmp->array_info)
+			free(tmp->array_info);
+		tmp->array_info = NULL;
+
 		free(tmp);
 		tmp = NULL;
+
 		tmp = n;
 	}
 }

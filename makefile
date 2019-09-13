@@ -1,5 +1,5 @@
-CC = tcc
-FLAGS = -g
+CC = gcc
+FLAGS = -g -O0
 YACC = yacc
 LEX = lex
 
