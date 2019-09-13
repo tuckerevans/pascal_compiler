@@ -134,6 +134,73 @@ char* msg;
 	return 0;
 }
 
+int count_args(t)
+ptree *t;
+{
+	int r, l;
+
+	if (!t)
+		return 0;
+
+	if (t->type == LIST){
+		r = count_args(t->r);
+		l = count_args(t->l);
+	} else if (t->type != LIST) {
+		return 1;
+	} else {
+		fprintf(stderr, "PTR: %x\n", t);
+		yyerror("NOT A PARAMETER LIST\n");
+	}
+
+	return r + l;
+}
+
+int set_func_types(t, nxt, size)
+ptree *t;
+int size, *nxt;
+{
+	int tmp;
+
+	if (!t)
+		return size;
+
+	if (t->type == LIST){
+		tmp = set_func_types(t->l, nxt, size);
+		for (;size > tmp; --size) ++nxt;
+		size = set_func_types(t->r, nxt, size);
+	} else if (t->type == ID){
+		if (--size == -1)
+			yyerror("VARIABLE COUNT CHANGED!!!\n");
+
+		*nxt = t->attr.nval->var_type;
+		return size;
+	}
+	return size;
+}
+
+int get_call_types(t, nxt, size)
+ptree *t;
+int size, *nxt;
+{
+	int tmp;
+
+	if (!t)
+		return size;
+
+	if (t->type == LIST){
+		tmp = set_func_types(t->l, nxt, size);
+		for (;size > tmp; --size) ++nxt;
+		size = set_func_types(t->r, nxt, size);
+	} else {
+		if (--size == -1)
+			yyerror("VARIABLE COUNT CHANGED!!!\n");
+		set_ret_type(t);
+		*nxt = t->ret_type;
+		return size;
+	}
+	return size;
+}
+
 int main()
 {
 #ifdef DEBUG_TYPES

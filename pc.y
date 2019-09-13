@@ -81,7 +81,7 @@ extern scope *cur_scope;
 %type <tval> proc_statement
 
 %type <tval> var
-%type <ival> type
+%type <tval> type
 %type <ival> standard_type
 
 %type <ival> TD
@@ -98,6 +98,10 @@ program
 		set_ret_type($9);
 		print_tree($9);
 		free_tree($4);
+#ifdef DEBUG
+		print_scope(cur_scope);
+#endif
+		pop_scope(&cur_scope);
 	}
 ;
 
@@ -132,11 +136,11 @@ var_declarations
 type
 	:standard_type
 	{
-		$$ = $1;
+		$$ = mktree($1, NULL, NULL);
 	}
 	|ARRAY '[' INUM DOTS INUM ']' OF standard_type
 	{
-		$$ = ARRAY - $8;
+		$$ = mktree(ARRAY - $8, mkinum($3), mkinum($5));
 	}
 ;
 
@@ -166,6 +170,9 @@ sub_prog_declaration
 		set_ret_type($4);
 		print_tree($4);
 		free_tree($4);
+#ifdef DEBUG
+		print_scope(cur_scope);
+#endif
 		pop_scope(&cur_scope);
 	}
 ;
@@ -174,16 +181,42 @@ sub_prog_declaration
 sub_prog_head
 	:FUNC ID arguments ':' standard_type ';'
 	{
+		node *tmp;
+		int i = 0;
+
 		check_id(cur_scope->prev, $2);
-		scope_insert(cur_scope->prev, $2);
+		tmp = scope_insert(cur_scope->prev, $2);
+
+		i = count_args($3);
+
+		tmp->func_info = malloc(sizeof(struct fi));
+		assert(tmp->func_info);
+		tmp->func_info->argc = i;
+		assert(tmp->func_info->argv = malloc(i * sizeof(int)));
+
+		assert(!set_func_types($3, tmp->func_info->argv, i));
+
+		tmp->var_type = $5;
 
 		cur_scope->ret_var = scope_insert(cur_scope, $2);
 		cur_scope->ret_var->var_type = $5;
 	}
 	|PROC ID arguments ';'
 	{
+		node *tmp;
+		int i = 0;
+
 		check_id(cur_scope->prev, $2);
-		scope_insert(cur_scope->prev, $2);
+		tmp = scope_insert(cur_scope->prev, $2);
+
+		i = count_args($3);
+
+		tmp->func_info = malloc(sizeof(struct fi));
+		assert(tmp->func_info);
+		tmp->func_info->argc = i;
+		assert(tmp->func_info->argv = malloc(i * sizeof(int)));
+
+		assert(!set_func_types($3, tmp->func_info->argv, i));
 	}
 ;
 
@@ -192,7 +225,9 @@ arguments
 	{
 		$$ = $2;
 	}
-	|/*empty*/
+	|/*empty*/{
+		$$ = NULL;
+	}
 ;
 
 param_list
@@ -244,6 +279,7 @@ statement
 	|proc_statement
 	{
 		$$ = $1;
+		check_call($$);
 	}
 	|compound_statement
 	{
@@ -320,6 +356,7 @@ proc_statement
 		tmp = check_exists(cur_scope, $1);
 		$$ = mktree(PCALL, mkid(tmp), $3);
 	}
+	/*calls checked with proc_statement*/
 ;
 
 expr_list
@@ -387,6 +424,7 @@ factor
 
 		tmp = check_exists(cur_scope, $1);
 		$$ = mktree(FCALL, mkid(tmp), $3);
+		check_call($$);
 	}
 	|INUM
 	{
@@ -403,6 +441,12 @@ factor
 	|NOT factor
 	{
 		$$ = mktree(NOT, $2, NULL);
+	}
+	|ADDOP factor{
+		if ($1 != SUB)
+			yyerror("SUB NOT CORRECT\n");
+		else
+			$$ = mktree(SUB, $2, NULL);
 	}
 ;
 

@@ -146,8 +146,20 @@ scope *s;
 
 	for (i = 0; i < HASH_SIZE; i++) {
 		for( tmp=s->table[i]; tmp; tmp = tmp->next) {
-			fprintf(stderr, "\t%s:%s\n", tmp->name, 
+			if(!tmp->array_info)
+			fprintf(stderr, "\t%s:%s\t", tmp->name,
 				pretty_type(tmp->var_type));
+			else
+			fprintf(stderr, "\t%s:%s [%d:%d]\t", tmp->name,
+				pretty_type(tmp->var_type),
+				tmp->array_info->start_idx,
+				tmp->array_info->start_idx
+				+ tmp->array_info->size);
+			if (tmp->func_info && tmp->func_info->argv) {
+			for (int i = 0; i < tmp->func_info->argc; i++)
+					fprintf(stderr, " %s ", pretty_type(tmp->func_info->argv[i]));
+			}
+			fprintf(stderr, "\n");
 		}
 	}
 }

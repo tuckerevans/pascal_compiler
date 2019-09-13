@@ -17,6 +17,9 @@ char *str;
 
 	p->var_type = -1;
 
+	p->func_info = NULL;
+	p->array_info = NULL;
+
 	return p;
 }
 

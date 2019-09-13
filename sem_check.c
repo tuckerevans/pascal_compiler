@@ -2,6 +2,8 @@
 
 #include <assert.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "y.tab.h"
 #include "pc.h"
@@ -54,7 +56,7 @@ ptree *t;
 		if (!(t->r && t->l))
 			yyerror("Missing nodes\n");
 
-		if (t->attr.opval == ADD || t->attr.opval == OR) {
+		if (t->attr.opval == AND || t->attr.opval == OR) {
 			if(t->l->ret_type == BOOL && t->r->ret_type ==BOOL)
 				return BOOL;
 			else {
@@ -65,20 +67,19 @@ ptree *t;
 						"Cannot use boolean "
 						"operator on type %s\n",
 						pretty_type(type));
-				yyerror(buf);
+				break;
 			}
 		}
 
 		if (t->r->ret_type == t->l->ret_type)
 			return t->r->ret_type;
-		else {
+		else
 			snprintf(buf, 100, "Mismached types: "
 					"Type %s "
 					"cannot be used with type %s\n",
 					pretty_type(t->r->ret_type),
 					pretty_type(t->l->ret_type));
-			yyerror(buf);
-		}
+
 		break;
 	case RELOP :
 		if (!(t->r && t->l))
@@ -91,7 +92,6 @@ ptree *t;
 					"cannot be compared to type %s\n",
 					pretty_type(t->r->ret_type),
 					pretty_type(t->l->ret_type));
-			yyerror(buf);
 		break;
 	case NOT:
 		if (t->l && t->l->ret_type == BOOL)
@@ -107,18 +107,14 @@ ptree *t;
 			yyerror("Incomplete parse tree\n");
 
 		if (t->l->ret_type == t->r->ret_type)
-			return 0;
-		else {
+			return 1;
+		else
 			snprintf(buf, 100, "Mismached types: "
 					"Cannot assign type %s "
 					"to variable \"%s\" of type %s\n",
 					pretty_type(t->r->ret_type),
 					t->l->attr.nval->name,
 					pretty_type(t->l->attr.nval->var_type));
-			yyerror(buf);
-		}
-
-
 		break;
 	case ARRAY_ACCESS:
 		if (!(t->r && t->l && t->l->attr.nval))
@@ -128,7 +124,7 @@ ptree *t;
 			snprintf(buf, 100, "Cannot access array"
 					"with type %s\n",
 					pretty_type(t->r->ret_type));
-			yyerror(buf);
+			break;
 		}
 
 		type = t->l->attr.nval -> var_type;
@@ -142,17 +138,68 @@ ptree *t;
 
 		if (t->l->ret_type != BOOL)
 			yyerror("If condition must be of type BOOL\n");
-		return 0;
+		return 1;
 	case FOR:
-		/*TODO add for type checking after parsing is correct*/
+		/*
+		                  FOR (0)
+		                 /   \
+		            TD(0)     STATEMENT(0)
+		           /     \
+		ASSIGNOP(0)       INUM(INT)
+		*/
+		if (!(t->r && t->l))
+			yyerror("Missing nodes\n");
+		if (t->l->ret_type == 1 && t->r->ret_type == 1)
+			return 1;
+		snprintf(buf, 100, "Incorrect types in for statement...\n");
 		break;
+	case TO:
+	case DT:
+		if (!(t->r && t->l))
+			yyerror("Missing nodes\n");
+
+		if (t->l->ret_type == 1 && t->r->ret_type == INT)
+			return 1;
+		snprintf(buf, 100, "Incorrect types HERE...\n");
+	case SUB:
+		return t->l->ret_type;
+		break;
+	case PCALL:
+	case FCALL:
+		if (t->l && t->l->attr.nval)
+			return t->l->attr.nval->var_type;
 	default:
 		return -200;
-		snprintf(buf, 101, "Unknown tree node: %d...\n", t->type);
-		yyerror(buf);
+		snprintf(buf, 100, "Unknown tree node: %d...\n", t->type);
 	}
 
+	yyerror(buf);
 	return -1;
 
 }
 
+void check_call(t)
+ptree *t;
+{
+	int argc, *argv;
+
+	if (!(t && (t->type == FCALL || t->type == PCALL)))
+		yyerror("Tree is not a function call\n");
+
+	if (!(t->l && t->l->attr.nval && t->l->attr.nval->func_info))
+		yyerror("Incorrect Call Tree\n");
+
+	argc = t->l->attr.nval->func_info->argc;
+	if (t->l->attr.nval->func_info->argc != count_args(t->r))
+		/*TODO add info about expected argument count*/
+		yyerror("Incorrect argument count");
+
+	assert(argv = malloc(sizeof(int) * argc));
+
+	get_call_types(t->r, argv, argc);
+
+	if (memcmp(argv, t->l->attr.nval->func_info->argv, argc * sizeof(int)))
+		/*TODO add info on which argument causes error*/
+		yyerror("Incorrect types in fuction arguments");
+
+}

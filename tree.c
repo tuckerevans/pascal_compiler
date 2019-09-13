@@ -21,6 +21,8 @@ ptree *l, *r;
 	t->type = type;
 	t->l = l;
 	t->r = r;
+	t->ret_type = 0;
+	t->attr.nval = 0;
 
 	return t;
 }
@@ -58,31 +60,51 @@ ptree *l, *r;
 	return p;
 }
 
-void update_type_info(list, type)
-int type;
-ptree *list;
+void update_type_info(list, t)
+ptree *list, *t;
 {
-	assert(list);
+	int type;
+	struct ai *info = NULL;
+	assert(list && t);
+
+	type = t->type;
+	if (type != INT && type != REAL){
+		assert(info = malloc(sizeof(struct ai)));
+		info->size = t->r->attr.ival - t->l->attr.ival;
+		info->start_idx = t->l->attr.ival;
+	}
+
 	if (list->type == ID) {
 		list->attr.nval->var_type = type;
+		if (info)
+			list->attr.nval->array_info = info;
 		return;
 	}
 
 	while (list->r && list->r->type == ID) {
 		/*Set type of right child through list*/
 		list->r->attr.nval->var_type = type;
+		if (info)
+			list->r->attr.nval->array_info = info;
 
 		if (list->l) {
 			if (list->l->type == LIST) {
 				list = list->l;
 				continue; /*Continue down list*/
-			} else if (list->l->type == ID)
+			} else if (list->l->type == ID) {
 				/*Set type of first declared ID
 				    (only left node in LIST)*/
 				list->l->attr.nval->var_type = type;
+				if (info){
+					list->l->attr.nval->array_info = info;
+				}
+			}
 		}
-		return; /*At _end_ of list (did not continue)*/
+		break; /*At _end_ of list (did not continue)*/
 	}
+
+	/*TODO free t. and list?*/
+	return;
 }
 
 void set_ret_type(t)
@@ -90,10 +112,12 @@ ptree *t;
 {
 	if (!t)
 		return;
-	
 
-	set_ret_type(t->l);
-	set_ret_type(t->r);
+	if (! (t->l && t->l->ret_type == 1))
+		set_ret_type(t->l);
+	if (! (t->r && t->r->ret_type == 1))
+		set_ret_type(t->r);
+
 	t->ret_type = check_ret_type(t);
 
 	return;
@@ -141,16 +165,14 @@ int spaces;
 			fprintf(stderr, "[LIST]");
 			break;
 		case ID:
-			if (t->r && t->r->attr.nval)
-				fprintf(stderr, "[ID: %s %s]",
-					t->r->attr.nval->name,
-					pretty_type(
-						t->attr.nval->var_type));
-			else
-				fprintf(stderr, "[ID: %s %s]",
-					t->attr.nval->name,
-					pretty_type(
-						t->attr.nval->var_type));
+			fprintf(stderr, "[ID: %s %s, ",
+				t->attr.nval->name,
+				pretty_type(
+					t->attr.nval->var_type));
+			if (t->attr.nval->func_info)
+				fprintf(stderr, "\t %d",
+						t->attr.nval->func_info->argc);
+			fprintf(stderr, "]");
 			break;
 		case INUM:
 			fprintf(stderr, "[INUM: %d]", t->attr.ival);
@@ -179,8 +201,24 @@ int spaces;
 		case DT:
 			fprintf(stderr, "[DOWN-TO]");
 			break;
+		case SUB:
+			fprintf(stderr, "[SUB]");
+			break;
+		case PCALL:
+			fprintf(stderr,"[P]");
+		case FCALL:
+			fprintf(stderr, "[CALL]");
+			break;
+		case INT:
+		case REAL:
+			fprintf(stderr, "[STD TYPE]");
+			break;
+		case ARRAY - INT:
+		case ARRAY - REAL:
+			fprintf(stderr, "[ARRAY]");
+			break;
 		default:
-			fprintf(stderr, "\t%d", t->type);
+			fprintf(stderr, "[?: %d]", t->type);
 			yyerror("Error in tree_print");
 		}
 		fprintf(stderr," %d\n", t->ret_type);
