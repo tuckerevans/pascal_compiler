@@ -73,15 +73,13 @@ ptree *list, *t;
 		info->size = t->r->attr.ival - t->l->attr.ival;
 		info->start_idx = t->l->attr.ival;
 	}
+	free_tree(t);
 
 	if (list->type == ID) {
 		list->attr.nval->var_type = type;
 		if (info)
 			list->attr.nval->array_info = info;
-		return;
-	}
-
-	while (list->r && list->r->type == ID) {
+	} else while (list->r && list->r->type == ID) {
 		/*Set type of right child through list*/
 		list->r->attr.nval->var_type = type;
 		if (info)
@@ -103,7 +101,7 @@ ptree *list, *t;
 		break; /*At _end_ of list (did not continue)*/
 	}
 
-	/*TODO free t. and list?*/
+	free_tree(list);
 	return;
 }
 
