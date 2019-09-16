@@ -97,7 +97,7 @@ program
 	{
 		set_ret_type($9);
 		print_tree($9);
-		free_tree($4);
+		free_tree($9);
 #ifdef DEBUG
 		print_scope(cur_scope);
 #endif
