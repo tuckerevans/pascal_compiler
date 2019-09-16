@@ -101,7 +101,6 @@ ptree *list, *t;
 		break; /*At _end_ of list (did not continue)*/
 	}
 
-	free_tree(list);
 	return;
 }
 

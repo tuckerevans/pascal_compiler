@@ -98,6 +98,7 @@ program
 		set_ret_type($9);
 		print_tree($9);
 		free_tree($9);
+		free_tree($4);
 #ifdef DEBUG
 		print_scope(cur_scope);
 #endif
@@ -129,6 +130,7 @@ var_declarations
 	:var_declarations VAR id_list ':' type ';'
 	{
 		update_type_info($3, $5);
+		free_tree($3);
 	}
 	|/*empty*/
 ;
@@ -195,6 +197,7 @@ sub_prog_head
 		assert(tmp->func_info->argv = malloc(i * sizeof(int)));
 
 		assert(!set_func_types($3, tmp->func_info->argv, i));
+		free_tree($3);
 
 		tmp->var_type = $5;
 
@@ -217,6 +220,7 @@ sub_prog_head
 		assert(tmp->func_info->argv = malloc(i * sizeof(int)));
 
 		assert(!set_func_types($3, tmp->func_info->argv, i));
+		free_tree($3);
 	}
 ;
 
