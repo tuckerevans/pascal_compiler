@@ -3,12 +3,13 @@ program main ( input, output );
         var a, b: integer;
         var x,y,z: real;
 	var ai :array [1..10] of integer;
+	var ar, ar2, ar3, ar4 :array [10..100] of real;
 	procedure boo (n: integer);
 	var a,c: integer;
 	begin
 		a := n
 	end;
-	function bar (a: integer) : real;
+	function bar (a: integer; b: array [19..100] of real) : real;
 	var test:integer;
 	begin
 		test := 2;
@@ -27,6 +28,7 @@ begin
 	a := 1;
         x := 3.14;
 	b := a + 35;
-	ai[2] := a
+	ai[2] := a;
+	bar (a, ar)
 	(* test *)
 end.
