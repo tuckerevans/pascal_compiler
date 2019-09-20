@@ -64,7 +64,8 @@ void update_type_info(list, t)
 ptree *list, *t;
 {
 	int type;
-	struct ai *info = NULL;
+	struct ai *info, *tmp;
+	info = tmp = NULL;
 	assert(list && t);
 
 	type = t->type;
@@ -82,8 +83,13 @@ ptree *list, *t;
 	} else while (list->r && list->r->type == ID) {
 		/*Set type of right child through list*/
 		list->r->attr.nval->var_type = type;
-		if (info)
+		if (info){
 			list->r->attr.nval->array_info = info;
+
+			assert(tmp =  malloc(sizeof(struct ai)));
+			memcpy(tmp, info, sizeof(struct ai));
+			info = tmp;
+		}
 
 		if (list->l) {
 			if (list->l->type == LIST) {
@@ -95,6 +101,10 @@ ptree *list, *t;
 				list->l->attr.nval->var_type = type;
 				if (info){
 					list->l->attr.nval->array_info = info;
+
+					assert(tmp = malloc(sizeof(struct ai)));
+					memcpy(tmp, info, sizeof(struct ai));
+					info = tmp;
 				}
 			}
 		}
