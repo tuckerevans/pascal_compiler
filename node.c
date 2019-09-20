@@ -12,7 +12,7 @@ char *str;
 	node *p = malloc(sizeof(node));
 	assert(p);
 
-	p->name = strdup(str);
+	p->name = str;
 	p->next = NULL;
 
 	p->var_type = -1;
@@ -38,13 +38,30 @@ char *str;
 	return NULL;
 }
 
-node* list_insert(root, str) /*TODO change to accept double pointer*/
+node* list_insert(root, str)
 node *root;
 char * str;
 {
 	node *p = mknode( str );
 	p->next = root;
 	return p;
+}
+void free_node(n)
+node *n;
+{
+	free(n->name);
+	n->name = NULL;
+
+	if (n->func_info)
+		free(n->func_info);
+	n->func_info = NULL;
+
+	if (n->array_info)
+		free(n->array_info);
+	n->array_info = NULL;
+
+	free(n);
+	n = NULL;
 }
 
 void free_list(n)
@@ -54,21 +71,7 @@ node *n;
 
 	for(tmp = n; tmp;) {
 		n = tmp->next;
-
-		free(tmp->name);
-		tmp->name = NULL;
-
-		if (tmp->func_info)
-			free(tmp->func_info);
-		tmp->func_info = NULL;
-
-		if (tmp->array_info)
-			free(tmp->array_info);
-		tmp->array_info = NULL;
-
-		free(tmp);
-		tmp = NULL;
-
+		free_node(tmp);
 		tmp = n;
 	}
 }

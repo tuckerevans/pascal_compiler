@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <assert.h>
+#include <string.h>
 
 #include "node.h"
 #include "scope.h"
@@ -201,7 +202,9 @@ sub_prog_head
 
 		tmp->var_type = $5;
 
-		cur_scope->ret_var = scope_insert(cur_scope, $2);
+		/* Need to duplicate ID.name so it is not freed with inner
+		 * scope*/
+		cur_scope->ret_var = scope_insert(cur_scope, strdup($2));
 		cur_scope->ret_var->var_type = $5;
 	}
 	|PROC ID arguments ';'
