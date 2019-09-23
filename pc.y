@@ -337,6 +337,7 @@ var
 	:ID
 	{
 		$$ = mkid(scope_safe_search(cur_scope,$1));
+		free($1);
 	}
 	|ID '[' expr ']'
 	{
@@ -345,6 +346,7 @@ var
 
 		$$ = mktree(ARRAY_ACCESS, mkid(tmp), $3);
 		$$->attr.nval = $$->l->attr.nval;
+		free($1);
 	}
 ;
 
@@ -355,6 +357,7 @@ proc_statement
 
 		tmp = check_exists(cur_scope, $1);
 		$$ = mktree(PCALL, mkid(tmp), NULL);
+		free($1);
 	}
 	|ID '(' expr_list ')'
 	{
@@ -362,6 +365,8 @@ proc_statement
 
 		tmp = check_exists(cur_scope, $1);
 		$$ = mktree(PCALL, mkid(tmp), $3);
+
+		free($1);
 	}
 	/*calls checked with proc_statement*/
 ;
@@ -417,6 +422,7 @@ factor
 
 		tmp = check_exists(cur_scope, $1);
 		$$ = mkid(tmp);
+		free($1);
 	}
 	|ID '[' expr ']'
 	{
@@ -424,6 +430,8 @@ factor
 
 		tmp = check_exists(cur_scope, $1);
 		$$ = mktree(ARRAY_ACCESS, mkid(tmp), $3);
+
+		free($1);
 	}
 	|ID '(' expr_list ')'
 	{
@@ -432,6 +440,8 @@ factor
 		tmp = check_exists(cur_scope, $1);
 		$$ = mktree(FCALL, mkid(tmp), $3);
 		check_call($$);
+
+		free($1);
 	}
 	|INUM
 	{
