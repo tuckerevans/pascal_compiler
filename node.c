@@ -52,8 +52,13 @@ node *n;
 	free(n->name);
 	n->name = NULL;
 
-	if (n->func_info)
+	if (n->func_info) {
+		if(n->func_info->argv)
+			free(n->func_info->argv);
+		n->func_info->argv = NULL;
+
 		free(n->func_info);
+	}
 	n->func_info = NULL;
 
 	if (n->array_info)
@@ -69,7 +74,8 @@ node *n;
 {
 	node *tmp;
 
-	for(tmp = n; tmp;) {
+	tmp = n;
+	while(tmp) {
 		n = tmp->next;
 		free_node(tmp);
 		tmp = n;
