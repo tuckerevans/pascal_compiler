@@ -26,6 +26,7 @@ extern scope *cur_scope;
 }
 
 %token PROG
+%token IO
 %token VAR
 %token PROC FUNC
 %token BEG END
@@ -94,7 +95,7 @@ extern scope *cur_scope;
 %%
 
 program
-	:PROG ID '(' id_list ')' ';'
+	:PROG ID '(' io_list ')' ';'
 	var_declarations
 	sub_prog_declarations
 	compound_statement
@@ -105,12 +106,16 @@ program
 		print_tree($9);
 #endif
 		free_tree($9);
-		free_tree($4);
 #ifdef DEBUG
 		print_scope(cur_scope);
 #endif
 		pop_scope(&cur_scope);
 	}
+;
+
+io_list
+	:IO
+	|io_list ',' IO
 ;
 
 id_list
