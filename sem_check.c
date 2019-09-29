@@ -189,6 +189,9 @@ ptree *t;
 	if (!(t->l && t->l->attr.nval && t->l->attr.nval->func_info))
 		yyerror("Incorrect Call Tree\n");
 
+	if (!(strcmp(t->l->attr.nval->name, "write") && strcmp(t->l->attr.nval->name, "read")))
+		return;
+
 	argc = t->l->attr.nval->func_info->argc;
 	if (t->l->attr.nval->func_info->argc != count_args(t->r))
 		/*TODO add info about expected argument count*/
