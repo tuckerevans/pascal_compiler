@@ -205,6 +205,8 @@ ptree *t;
 		/*TODO add info on which argument causes error*/
 		yyerror("Incorrect types in fuction arguments");
 
+	free(argv);
+	argv = NULL;
 }
 
 int func_ret(t, name)
