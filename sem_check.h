@@ -12,4 +12,5 @@ int check_ret_type(ptree*);
 
 void check_call(ptree*);
 
+void check_func_return(ptree*, char*);
 #endif

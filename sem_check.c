@@ -206,3 +206,30 @@ ptree *t;
 		yyerror("Incorrect types in fuction arguments");
 
 }
+
+int func_ret(t, name)
+ptree *t;
+char *name;
+{
+	if (!t)
+		return 0;
+
+	if (t->type == ASSIGNOP && t->l)
+		if (t->l->type == ID && !strcmp(t->l->attr.nval->name, name))
+			return 1;
+
+	return func_ret(t->l, name) || func_ret(t->r, name);
+}
+
+void check_func_return(t,name)
+ptree *t;
+char *name;
+{
+	char buf[100];
+
+	if (!func_ret(t,name)) {
+		snprintf(buf, 100, "Function %s does not return a value\n",
+				name);
+		yyerror(buf);
+	}
+}

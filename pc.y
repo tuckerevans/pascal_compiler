@@ -92,6 +92,8 @@ extern scope *cur_scope;
 
 %type <ival> TD
 
+%type <sval> sub_prog_head
+
 %%
 
 program
@@ -181,6 +183,9 @@ sub_prog_declaration
 	 sub_prog_declarations
 	 compound_statement
 	{
+		if ($1)
+			check_func_return($4, $1);
+
 		set_ret_type($4);
 #ifdef DEBUG
 		print_tree($4);
@@ -219,6 +224,8 @@ sub_prog_head
 		 * scope*/
 		cur_scope->ret_var = scope_insert(cur_scope, strdup($2));
 		cur_scope->ret_var->var_type = $5;
+
+		$$ = $2;
 	}
 	|PROC ID arguments ';'
 	{
@@ -237,6 +244,8 @@ sub_prog_head
 
 		assert(!set_func_types($3, tmp->func_info->argv, i));
 		free_tree($3);
+
+		$$ = NULL;
 	}
 ;
 
