@@ -110,6 +110,7 @@ program
 		print_scope(cur_scope);
 #endif
 		pop_scope(&cur_scope);
+		free($2);
 	}
 ;
 
