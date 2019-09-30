@@ -81,6 +81,10 @@ extern scope *cur_scope;
 %type <tval> opt_statements
 %type <tval> proc_statement
 
+%type <tval> ifelse
+%nonassoc THEN
+%nonassoc ELSE
+
 %type <tval> var
 %type <tval> type
 %type <ival> standard_type
@@ -296,9 +300,9 @@ statement
 	{
 		$$ = $1;
 	}
-	|IF expr THEN statement ELSE statement
+	|ifelse
 	{
-		$$ = mktree(IF, $2, mktree(THEN, $4, $6));
+		$$ = $1;
 	}
 	|WHILE expr DO statement
 	{
@@ -323,6 +327,16 @@ statement
 	| expr
 	{
 		$$ = $1;
+	}
+;
+ifelse
+	:IF expr THEN statement
+	{
+		$$ = mktree(IF, $2, mktree(THEN, $4, NULL));
+	}
+	|IF expr THEN statement ELSE statement
+	{
+		$$ = mktree(IF, $2, mktree(THEN, $4, $6));
 	}
 ;
 
