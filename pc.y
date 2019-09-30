@@ -359,13 +359,15 @@ TD
 var
 	:ID
 	{
-		$$ = mkid(scope_safe_search(cur_scope,$1));
+		node *tmp;
+		tmp = check_exists(cur_scope, $1);
+		$$ = mkid(tmp);
 		free($1);
 	}
 	|ID '[' expr ']'
 	{
 		node* tmp;
-		tmp = scope_safe_search(cur_scope, $1);
+		tmp = check_exists(cur_scope, $1);
 
 		$$ = mktree(ARRAY_ACCESS, mkid(tmp), $3);
 		$$->attr.nval = $$->l->attr.nval;

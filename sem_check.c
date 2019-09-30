@@ -27,7 +27,7 @@ char *n;
 	node *tmp;
 	char buf[100];
 
-	if(!(tmp = scope_search(s,n))) {
+	if(!(tmp = scope_safe_search(s,n))) {
 		snprintf(buf, 100, "Cannot find \"%s\"\n", n);
 		yyerror(buf);
 	}
