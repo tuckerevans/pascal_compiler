@@ -1,5 +1,5 @@
 CC = gcc
-FLAGS = -g -O0
+FLAGS = -g -O0 -Wall -ggdb3
 YACC = yacc
 LEX = lex
 
