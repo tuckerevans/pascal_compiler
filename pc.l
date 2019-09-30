@@ -3,6 +3,7 @@
 #include "scope.h"
 #include "y.tab.h"
 #include "pc.h"
+#include "assert.h"
 
 int line_num=1;
 extern scope *cur_scope;
@@ -38,6 +39,9 @@ input {
 	node *tmp;
 	tmp = scope_insert(cur_scope, strdup("write"));
 	tmp->func_info = malloc(sizeof(struct fi));
+	assert(tmp->func_info);
+	tmp->func_info->argc = -1;
+	tmp->func_info->argv = NULL;
 
 	return IO;
 }

@@ -207,7 +207,9 @@ sub_prog_head
 
 		tmp->func_info = malloc(sizeof(struct fi));
 		assert(tmp->func_info);
+		tmp->func_info->argv = NULL;
 		tmp->func_info->argc = i;
+
 		assert(tmp->func_info->argv = malloc(i * sizeof(int)));
 
 		assert(!set_func_types($3, tmp->func_info->argv, i));
@@ -232,7 +234,9 @@ sub_prog_head
 
 		tmp->func_info = malloc(sizeof(struct fi));
 		assert(tmp->func_info);
+		tmp->func_info->argv = NULL;
 		tmp->func_info->argc = i;
+
 		assert(tmp->func_info->argv = malloc(i * sizeof(int)));
 
 		assert(!set_func_types($3, tmp->func_info->argv, i));
