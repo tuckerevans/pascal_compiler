@@ -97,7 +97,9 @@ program
 	'.'
 	{
 		set_ret_type($9);
+#ifdef DEBUG
 		print_tree($9);
+#endif
 		free_tree($9);
 		free_tree($4);
 #ifdef DEBUG
@@ -171,7 +173,9 @@ sub_prog_declaration
 	 compound_statement
 	{
 		set_ret_type($4);
+#ifdef DEBUG
 		print_tree($4);
+#endif
 		free_tree($4);
 #ifdef DEBUG
 		print_scope(cur_scope);
