@@ -246,4 +246,6 @@ ptree *t;
 	free_tree(t->l);
 	free_tree(t->r);
 	free(t);
+
+	/*t->attr.nval freed in free_scope*/
 }

@@ -36,6 +36,8 @@ scope *s;
 		free_list(s->table[i]);
 	}
 
+	/*free_list takes care of freeing s->ret_var*/
+
 	free(s);
 	s = NULL;
 }
