@@ -36,7 +36,9 @@ scope *s;
 		free_list(s->table[i]);
 	}
 
-	/*free_list takes care of freeing s->ret_var*/
+	if (s->ret_var)
+		free(s->ret_var);
+	s->ret_var = NULL;
 
 	free(s);
 	s = NULL;
@@ -100,9 +102,14 @@ node* scope_search(root, name)
 scope *root;
 char *name;
 {
-	int hash = hashpjw(name);
+	int hash;
+	node *tmp;
 
-	node *tmp = root->table[hash];
+	if (root->ret_var && !strcmp(root->ret_var->name, name))
+		return root->ret_var;
+
+	hash = hashpjw(name);
+	tmp = root->table[hash];
 	return list_search(tmp, name);
 }
 

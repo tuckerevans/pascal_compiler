@@ -222,7 +222,7 @@ sub_prog_head
 
 		/* Need to duplicate ID.name so it is not freed with inner
 		 * scope*/
-		cur_scope->ret_var = scope_insert(cur_scope, strdup($2));
+		cur_scope->ret_var = mknode(strdup($2));
 		cur_scope->ret_var->var_type = $5;
 
 		$$ = $2;
