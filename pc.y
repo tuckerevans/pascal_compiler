@@ -203,26 +203,34 @@ sub_prog_head
 	:FUNC ID arguments ':' standard_type ';'
 	{
 		node *tmp;
-		int i = 0;
+		int i, j;
+		scope *ss[2];
 
-		check_id(cur_scope->prev, $2);
-		tmp = scope_insert(cur_scope->prev, $2);
+		ss[0] = cur_scope->prev;
+		ss[1] = cur_scope;
 
-		i = count_args($3);
+		/*Add function to both current and previous scope*/
+		for (j = 0; j < 2; j++) {
+			i = 0;
+			check_id(ss[j], $2);
+			tmp = scope_insert(ss[j], strdup($2));
 
-		tmp->func_info = malloc(sizeof(struct fi));
-		assert(tmp->func_info);
-		tmp->func_info->argc = i;
-		assert(tmp->func_info->argv = malloc(i * sizeof(int)));
+			i = count_args($3);
 
-		assert(!set_func_types($3, tmp->func_info->argv, i));
+			tmp->func_info = malloc(sizeof(struct fi));
+			assert(tmp->func_info);
+			tmp->func_info->argc = i;
+			assert(tmp->func_info->argv = malloc(i * sizeof(int)));
+
+			assert(!set_func_types($3, tmp->func_info->argv, i));
+			tmp->var_type = $5;
+		}
+
 		free_tree($3);
 
-		tmp->var_type = $5;
 
-		/* Need to duplicate ID.name so it is not freed with inner
-		 * scope*/
-		cur_scope->ret_var = mknode(strdup($2));
+		/* Fuction name already strdup for function, no need here*/
+		cur_scope->ret_var = mknode($2);
 		cur_scope->ret_var->var_type = $5;
 
 		$$ = $2;
@@ -369,7 +377,12 @@ var
 	:ID
 	{
 		node *tmp;
-		tmp = check_exists(cur_scope, $1);
+		/*check for ret_var*/
+		if (cur_scope->ret_var &&
+				!strcmp(cur_scope->ret_var->name, $1))
+			tmp = cur_scope->ret_var;
+		else
+			tmp = check_exists(cur_scope, $1);
 		$$ = mkid(tmp);
 		free($1);
 	}

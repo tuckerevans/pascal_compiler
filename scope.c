@@ -105,9 +105,6 @@ char *name;
 	int hash;
 	node *tmp;
 
-	if (root->ret_var && !strcmp(root->ret_var->name, name))
-		return root->ret_var;
-
 	hash = hashpjw(name);
 	tmp = root->table[hash];
 	return list_search(tmp, name);
