@@ -15,4 +15,3 @@ int set_func_types(ptree*, int*, int);
 int get_call_types(ptree*, int*, int);
 #endif
 
-#define DEBUG

@@ -9,6 +9,7 @@
 #include "tree.h"
 #include "y.tab.h"
 #include "pc.h"
+#include "gen_code.h"
 #include "sem_check.h"
 
 
@@ -107,6 +108,8 @@ program
 #ifdef DEBUG
 		print_tree($9);
 #endif
+		gen_code($9);
+
 		free_tree($9);
 #ifdef DEBUG
 		print_scope(cur_scope);
@@ -191,6 +194,8 @@ sub_prog_declaration
 #ifdef DEBUG
 		print_tree($4);
 #endif
+		gen_code($4);
+
 		free_tree($4);
 #ifdef DEBUG
 		print_scope(cur_scope);
