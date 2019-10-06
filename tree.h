@@ -16,6 +16,8 @@ typedef struct parse_tree {
 	} attr;
 	int ret_type;
 	struct parse_tree *l, *r;
+
+	int label;
 } ptree;
 
 void aux_tree_print(ptree*, int);

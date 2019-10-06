@@ -23,6 +23,7 @@ ptree *l, *r;
 	t->r = r;
 	t->ret_type = 0;
 	t->attr.nval = 0;
+	t->label = -1;
 
 	return t;
 }
@@ -237,7 +238,7 @@ int spaces;
 		fprintf(stderr, "[?: %d]", t->type);
 		yyerror("Error in tree_print");
 	}
-	fprintf(stderr," %d\n", t->ret_type);
+	fprintf(stderr," %d: L %d\n", t->ret_type, t->label);
 	aux_tree_print(t->l, spaces + 2);
 	aux_tree_print(t->r, spaces + 2);
 }
