@@ -148,7 +148,6 @@ ptree *t;
 	} else if (t->type != LIST) {
 		return 1;
 	} else {
-		fprintf(stderr, "PTR: %x\n", t);
 		yyerror("NOT A PARAMETER LIST\n");
 	}
 

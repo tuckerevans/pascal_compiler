@@ -35,7 +35,7 @@ id	[A-Za-z][A-Za-z0-9_]*
 	return PROG;
 }
 
-input {
+output {
 	node *tmp;
 	tmp = scope_insert(cur_scope, strdup("write"));
 	tmp->func_info = malloc(sizeof(struct fi));
@@ -46,7 +46,7 @@ input {
 	return IO;
 }
 
-output {
+input {
 	node *tmp;
 	tmp = scope_insert(cur_scope, strdup("read"));
 	tmp->func_info = malloc(sizeof(struct fi));
