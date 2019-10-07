@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "gen_code.h"
 #include "pc.h"
 
@@ -37,13 +38,45 @@ ptree *t;
 {
 }
 
-void gen_code(t, name)
+void gen_statement(t)
 ptree *t;
 {
-	/*Test gen_label*/
-	if (t->type == ASSIGNOP){
-		gen_label(t->r);
-		print_tree(t->r);
+	char buf[100];
+
+	if (!t)
+		return;
+
+	switch (t->type){
+	case ASSIGNOP:
+
+		break;
+	case PCALL:
+
+		break;
+	case LIST:
+
+		break;
+	case IF:
+
+		break;
+	case WHILE:
+
+		break;
+
+	case FOR:
+		break;
+	default:
+		snprintf(buf, 100, "Unknown statement type: %d\n", t->type);
+		yyerror(buf);
 	}
 }
 
+void gen_code(t, name)
+ptree *t;
+char *name;
+{
+	printf("\n.globl %s\n.type %s, @function\n%s:\n", name, name, name);
+
+	/*TODO call gen_statement on all statements in LIST t*/
+	/*Look at set_type for list traverseal code*/
+}
