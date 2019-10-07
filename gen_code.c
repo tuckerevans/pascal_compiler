@@ -71,12 +71,24 @@ ptree *t;
 	}
 }
 
+gen_statement_order(t)
+ptree *t;
+{
+	if (t->type != LIST){
+		gen_statement(t);
+		return;
+	}
+
+	gen_statement_order(t->l);
+	gen_statement_order(t->r);
+
+}
+
 void gen_code(t, name)
 ptree *t;
 char *name;
 {
 	printf("\n.globl %s\n.type %s, @function\n%s:\n", name, name, name);
 
-	/*TODO call gen_statement on all statements in LIST t*/
-	/*Look at set_type for list traverseal code*/
+	gen_statement_order(t);
 }
