@@ -122,6 +122,7 @@ program
 io_list
 	:IO
 	|io_list ',' IO
+	| /*empty*/
 ;
 
 id_list
