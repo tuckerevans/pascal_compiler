@@ -203,7 +203,7 @@ int size, *nxt;
 int main()
 {
 #ifdef DEBUG_TYPES
-	printf(
+	fprintf(stderr,
 		"\nPROG\t\t%d\n"
 		"VAR\t\t%d\n"
 		"PROC\t\t%d\n"

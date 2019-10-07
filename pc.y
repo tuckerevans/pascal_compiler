@@ -93,7 +93,7 @@ extern scope *cur_scope;
 
 %type <ival> TD
 
-%type <sval> sub_prog_head
+%type <tval> sub_prog_head
 
 %%
 
@@ -108,7 +108,7 @@ program
 #ifdef DEBUG
 		print_tree($9);
 #endif
-		gen_code($9);
+		gen_code($9, $2);
 
 		free_tree($9);
 #ifdef DEBUG
@@ -187,14 +187,20 @@ sub_prog_declaration
 	 sub_prog_declarations
 	 compound_statement
 	{
-		if ($1)
-			check_func_return($4, $1);
+		char *name = $1->l->attr.nval->name;
+		$1->l->attr.nval = NULL;
+
+		if ($1->type == FCALL)
+			check_func_return($4, name);
+
+		free_tree($1);
+
 
 		set_ret_type($4);
 #ifdef DEBUG
 		print_tree($4);
 #endif
-		gen_code($4);
+		gen_code($4, name);
 
 		free_tree($4);
 #ifdef DEBUG
@@ -240,7 +246,8 @@ sub_prog_head
 		cur_scope->ret_var = mknode($2);
 		cur_scope->ret_var->var_type = $5;
 
-		$$ = $2;
+		$$ = mktree(FCALL, mkid(tmp), NULL);
+
 	}
 	|PROC ID arguments ';'
 	{
@@ -262,7 +269,7 @@ sub_prog_head
 		assert(!set_func_types($3, tmp->func_info->argv, i));
 		free_tree($3);
 
-		$$ = NULL;
+		$$ = mktree(PCALL, mkid(tmp), NULL);
 	}
 ;
 

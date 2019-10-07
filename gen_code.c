@@ -32,8 +32,12 @@ ptree *t;
 
 }
 
+void gen_expr(t)
+ptree *t;
+{
+}
 
-void gen_code(t)
+void gen_code(t, name)
 ptree *t;
 {
 	/*Test gen_label*/
