@@ -1,6 +1,21 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
 #include "gen_code.h"
 #include "pc.h"
+
+#define REG_SWAP {\
+	char *tmp_reg_swap = *reg_ptr;\
+	*reg_ptr = *(reg_ptr + 1);\
+	*(reg_ptr + 1) = tmp_reg_swap;\
+}
+#define REG_POP {if (reg_cnt > 0) reg_ptr++, reg_cnt--;\
+	else yyerror("CAN'T POP");}
+#define REG_PUSH {if (reg_cnt < 13) reg_ptr--, reg_cnt++;\
+		else yyerror("CAN'T PUSH");}
+
+char **reg_stack, **reg_ptr;
+int reg_cnt;
 
 int gen_label(t)
 ptree *t;
@@ -107,6 +122,19 @@ void gen_code(t, name)
 ptree *t;
 char *name;
 {
+	reg_stack = malloc(13 * sizeof(char*));
+	assert(reg_stack);
+	reg_stack[0] = "RAX";  reg_stack[1] = "RCX";
+	reg_stack[2] = "RDX";  reg_stack[3] = "RSI";
+	reg_stack[4] = "RDI";  reg_stack[5] = "R8";
+	reg_stack[6] = "R9";   reg_stack[7] = "R10";
+	reg_stack[8] = "R11";  reg_stack[9] = "R12";
+	reg_stack[10] = "R13"; reg_stack[11] = "R14";
+	reg_stack[12] = "R15";
+
+	reg_ptr = reg_stack;
+	reg_cnt = 13;
+
 	fprintf(stdout, "\n.globl %s\n", name);
 	fprintf(stdout, ".type %s, @function\n%s:\n", name, name);
 
