@@ -13,6 +13,7 @@
 	else yyerror("CAN'T POP");}
 #define REG_PUSH {if (reg_cnt < 13) reg_ptr--, reg_cnt++;\
 		else yyerror("CAN'T PUSH");}
+#define GEN_EXPR(x) {gen_label(x); gen_expr(x);}
 
 char **reg_stack, **reg_ptr;
 int reg_cnt;
@@ -45,9 +46,69 @@ ptree *t;
 
 }
 
+/*Based on Dragon Book gen_code()*/
 void gen_expr(t)
 ptree *t;
 {
+	if (!t) {
+		fprintf(stderr, "GEN_EXPR: NOT T\n");
+		return;
+	}
+
+	/*case 0
+	 * t is a left leaf*/
+	if ((!t->r) && (!t->l) && t->label != 0) {
+		switch (t->type) {
+		case ID:
+			fprintf(stdout, "mov\t%s, %s\n",t->attr.nval->name, *reg_ptr);
+			break;
+		case INUM:
+			fprintf(stdout, "mov\t$%d, %s\n",t->attr.ival, *reg_ptr);
+			break;
+		default:
+			fprintf(stdout, "mov OTHER");
+		}
+	}
+	/*case 1
+	 * t has a right child with label 0*/
+	else if(t->r && t->r->label == 0) {
+		GEN_EXPR(t->l);
+		if (t->r && t->r->type == INT) {
+			fprintf(stdout, "op\t$%d,\n", t->r->attr.ival);
+			fprintf(stdout, "op\t$%d,%s\n", t->r->attr.ival, *reg_ptr);
+		}
+	}
+	/*case 2
+	 * 1 <= t->l->label < t->r->label AND t->l->lable < reg_cnt*/
+	else if ((t->l->label <= 1 && t->l->label < t->r->label)
+			&& t->l->label < reg_cnt) {
+
+		REG_SWAP
+		GEN_EXPR(t->l);
+		REG_POP
+		GEN_EXPR(t->r);
+		fprintf(stdout, "op\t%s, %s\n", *(reg_ptr + 1), *reg_ptr);
+		REG_PUSH
+		REG_SWAP
+	}
+	/*case 3
+	 * 1 <= t->r->label <= t->l->label */
+	else if (t->r->label <= 1 && t->r->label <= t->l->label) {
+		GEN_EXPR(t->l);
+		REG_POP
+		GEN_EXPR(t->r);
+		fprintf(stdout, "op\t%s, %s\n", *reg_ptr, *(reg_ptr + 1));
+		REG_PUSH
+	}
+	/*case 4
+	 *t->l->label, t->r->label >= reg_cnt*/
+	else if (t->l->label >= reg_cnt && t->r->label >= reg_cnt){
+		/*TODO implement case 4*/
+		yyerror("CASE 4 of gen_expr() NOT IMPLEMENTED\n");
+	} else {
+		yyerror("NOT ONE OF DEFINED CASES [gen_expr()]\n");
+	}
+
 }
 
 void gen_statement(t)
