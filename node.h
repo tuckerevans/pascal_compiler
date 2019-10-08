@@ -17,6 +17,7 @@ typedef struct node_s {
 	char *name;
 	struct node_s *next;
 	int var_type;
+	int offset;
 
 	struct fi* func_info;
 	struct ai* array_info;

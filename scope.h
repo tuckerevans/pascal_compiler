@@ -9,6 +9,7 @@ typedef struct hash {
 	node* table[HASH_SIZE];
 	struct hash *prev;
 	node* ret_var;
+	int offset;
 } scope;
 
 scope* mkscope();

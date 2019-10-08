@@ -21,6 +21,8 @@ scope* mkscope()
 	p->prev = NULL;
 	p->ret_var= NULL;
 
+	p->offset = 2;
+
 	return p;
 }
 

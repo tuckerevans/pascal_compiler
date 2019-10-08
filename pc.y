@@ -133,6 +133,7 @@ id_list
 		check_id(cur_scope, $1);
 
 		tmp = scope_insert(cur_scope, $1);
+		tmp->offset = cur_scope->offset++;
 		$$ = mkid(tmp);
 	}
 	|id_list ',' ID
@@ -141,6 +142,7 @@ id_list
 
 		check_id(cur_scope, $3);
 		tmp = scope_insert(cur_scope, $3);
+		tmp->offset = cur_scope->offset++;
 		$$ = mktree(LIST, $1, mkid(tmp));
 	}
 ;

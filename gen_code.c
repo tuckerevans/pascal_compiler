@@ -123,7 +123,8 @@ ptree *t;
 	switch (t->type){
 	case ASSIGNOP:
 		if (t->l->ret_type == INT) {
-			fprintf(stderr, "ASSIGN (INT) %s\n", t->l->attr.nval->name);
+			GEN_EXPR(t->r);
+			fprintf(stdout, "mov %s, ADDR\n", *reg_ptr);
 		} else {
 			fprintf(stderr, "ASSIGN (REAL) %s\n", t->l->attr.nval->name);
 		}
