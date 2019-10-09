@@ -123,9 +123,12 @@ int c;
 			break;
 		case MUL:
 			fprintf(stdout, "imulq\t");
+			if (c == 1)
+				goto case1;
+			goto case23;
 			break;
 		case DIV:
-			fprintf(stdout, "idivq\t");
+			gen_load(t);
 			break;
 		default:
 			fprintf(stderr, "OPVAL: %d\n", t->attr.opval);
@@ -229,6 +232,8 @@ ptree *t;
 			gen_load(t->l);
 			fprintf(stdout, "negq\t%s\n", *reg_ptr);
 			break;
+		case DIV:
+			yyerror("DIV not imlemented\n");
 		default:
 			fprintf(stdout, "movq OTHER");
 		}
