@@ -40,3 +40,21 @@ headers: pc.h tree.h sem_check.h scope.h node.h y.tab.c gen_code.h
 
 clean:
 	rm -f mypc *.o y.tab.* lex.yy.*
+
+tar:  headers pc.y pc.l tree.c scope.c node.c pc.c sem_check.c gen_code.c
+	tar -czf evans_pc.tar.gz -C ../ \
+	pascal_compiler/gen_code.c  \
+	pascal_compiler/gen_code.h  \
+	pascal_compiler/main.c      \
+	pascal_compiler/node.c      \
+	pascal_compiler/node.h      \
+	pascal_compiler/pc.h        \
+	pascal_compiler/pc.l        \
+	pascal_compiler/pc.y        \
+	pascal_compiler/scope.c     \
+	pascal_compiler/scope.h     \
+	pascal_compiler/tree.c      \
+	pascal_compiler/tree.h      \
+	pascal_compiler/sem_check.c \
+	pascal_compiler/sem_check.h \
+	pascal_compiler/makefile
