@@ -245,6 +245,8 @@ sub_prog_head
 
 			assert(!set_func_types($3, tmp->func_info->argv, i));
 			tmp->var_type = $5;
+
+			tmp->offset = ss[j]->offset++;
 		}
 
 		update_offsets($3, -2);
@@ -255,6 +257,7 @@ sub_prog_head
 		/* Fuction name already strdup for function, no need here*/
 		cur_scope->ret_var = mknode($2);
 		cur_scope->ret_var->var_type = $5;
+		cur_scope->ret_var->offset=cur_scope->offset - 1;
 
 		$$ = mktree(FUNC, mkid(tmp), NULL);
 
