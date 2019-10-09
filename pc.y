@@ -108,7 +108,10 @@ program
 #ifdef DEBUG
 		print_tree($9);
 #endif
+
+#ifdef GENERATE_CODE
 		gen_code($9, $2);
+#endif
 
 		free_tree($9);
 #ifdef DEBUG
@@ -203,7 +206,9 @@ sub_prog_declaration
 #ifdef DEBUG
 		print_tree($4);
 #endif
+#ifdef GENERATE_CODE
 		gen_code($4, name);
+#endif
 
 		free_tree($4);
 #ifdef DEBUG
