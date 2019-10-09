@@ -61,6 +61,28 @@ ptree *l, *r;
 	return p;
 }
 
+int update_offsets(list, i)
+ptree *list;
+int i;
+{
+	if (!list) {
+		return i;
+	}
+
+	if (list->type != LIST) {
+		if (list->type == ID && list->attr.nval) {
+			list->attr.nval->offset = i--;
+			return i;
+		} else {
+			yyerror("updating offsets\n");
+		}
+	}
+
+	i = update_offsets(list->l, i);
+	i = update_offsets(list->r, i);
+	return i;
+}
+
 void update_type_info(list, t)
 ptree *list, *t;
 {
@@ -189,7 +211,7 @@ int spaces;
 		if (t->attr.nval->func_info)
 			fprintf(stderr, "\t %d",
 					t->attr.nval->func_info->argc);
-		fprintf(stderr, "]");
+		fprintf(stderr, "] O: %d", t->attr.nval->offset);
 		break;
 	case INUM:
 		fprintf(stderr, "[INUM: %d]", t->attr.ival);
@@ -238,7 +260,7 @@ int spaces;
 		fprintf(stderr, "[?: %d]", t->type);
 		yyerror("Error in tree_print");
 	}
-	fprintf(stderr," %d: L %d\n", t->ret_type, t->label);
+	fprintf(stderr,", T: %d, L: %d\n", t->ret_type, t->label);
 	aux_tree_print(t->l, spaces + 2);
 	aux_tree_print(t->r, spaces + 2);
 }

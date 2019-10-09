@@ -247,6 +247,7 @@ sub_prog_head
 			tmp->var_type = $5;
 		}
 
+		update_offsets($3, -1);
 		free_tree($3);
 
 
@@ -275,6 +276,8 @@ sub_prog_head
 		assert(tmp->func_info->argv = malloc(i * sizeof(int)));
 
 		assert(!set_func_types($3, tmp->func_info->argv, i));
+
+		update_offsets($3, -1);
 		free_tree($3);
 
 		$$ = mktree(PROC, mkid(tmp), NULL);
@@ -284,6 +287,7 @@ sub_prog_head
 arguments
 	:'(' param_list ')'
 	{
+		cur_scope->offset -= count_args($2);
 		$$ = $2;
 	}
 	|/*empty*/{
