@@ -90,6 +90,24 @@ ptree *t;
 
 }
 
+void gen_expr(ptree*);
+void gen_arguments(t)
+ptree *t;
+{
+	if (!t)
+		return;
+	if (t->type != LIST){
+		GEN_EXPR(t)
+		fprintf(stdout, "pushq\t%s", *reg_ptr);
+
+		fprintf(stdout, "\n##ARGUMENT BOUNDARY\n");
+		return;
+	}
+	gen_arguments(t->r);
+	gen_arguments(t->l);
+}
+
+
 /*Based on Dragon Book gen_code()*/
 void gen_expr(t)
 ptree *t;
@@ -123,67 +141,57 @@ ptree *t;
 		case INUM:
 			fprintf(stdout, "movq\t$%d, %s\n",t->attr.ival, *reg_ptr);
 			break;
+		case FCALL:
+			break;
 		default:
 			fprintf(stdout, "movq OTHER");
 		}
 	}
 	/*case 1
 	 * t has a right child with label 0*/
-	else if(t->r && t->r->label == 0) {
+	else if(t->r && t->r && t->r->label == 0) {
 		GEN_EXPR(t->l);
-		if (t->r && t->r->type == INT) {
-			fprintf(stdout, "op\t$%d,\n", t->r->attr.ival);
-			fprintf(stdout, "op\t$%d,%s\n", t->r->attr.ival, *reg_ptr);
-		} else {
+		if (t->r && t->r->type == REAL) {
 			yyerror(FLOAT_ERROR);
 		}
+
+		gen_op(t);
 	}
 	/*case 2
 	 * 1 <= t->l->label < t->r->label AND t->l->lable < reg_cnt*/
-	else if ((t->l->label <= 1 && t->l->label < t->r->label)
+	else if (t->l && t->r
+			&& (t->l->label <= 1 && t->l->label < t->r->label)
 			&& t->l->label < reg_cnt) {
 
 		REG_SWAP
 		GEN_EXPR(t->l);
 		REG_POP
 		GEN_EXPR(t->r);
-		fprintf(stdout, "op\t%s, %s\n", *(reg_ptr + 1), *reg_ptr);
+		gen_op(t);
 		REG_PUSH
 		REG_SWAP
 	}
 	/*case 3
 	 * 1 <= t->r->label <= t->l->label */
-	else if (t->r->label <= 1 && t->r->label <= t->l->label) {
+	else if (t->l && t->r && t->r->label <= 1
+			&& t->r->label <= t->l->label) {
 		GEN_EXPR(t->l);
 		REG_POP
 		GEN_EXPR(t->r);
-		fprintf(stdout, "op\t%s, %s\n", *reg_ptr, *(reg_ptr + 1));
+		gen_op(t);
 		REG_PUSH
 	}
 	/*case 4
 	 *t->l->label, t->r->label >= reg_cnt*/
-	else if (t->l->label >= reg_cnt && t->r->label >= reg_cnt){
+	else if (t->l && t->r && t->l->label >= reg_cnt
+			&& t->r->label >= reg_cnt){
 		/*TODO implement case 4*/
 		yyerror("CASE 4 of gen_expr() NOT IMPLEMENTED\n");
 	} else {
+		print_tree(t);
 		yyerror("NOT ONE OF DEFINED CASES [gen_expr()]\n");
 	}
 
-}
-
-void gen_arguments(t)
-ptree *t;
-{
-	if (t->type != LIST){
-		GEN_EXPR(t)
-		fprintf(stdout, "pushq\t%s", *reg_ptr);
-
-		fprintf(stdout, "\n##ARGUMENT BOUNDARY\n");
-		return;
-	}
-
-	gen_arguments(t->r);
-	gen_arguments(t->l);
 }
 
 void gen_statement(t)
