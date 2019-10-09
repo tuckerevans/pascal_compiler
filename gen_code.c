@@ -6,6 +6,9 @@
 #include "pc.h"
 #include "scope.h"
 
+char **stack_reg[1024];
+char ***reg_stack_save;
+
 #define FLOAT_ERROR "Cannot produce code with reals\n"
 
 scope *cur_scope;
@@ -40,6 +43,8 @@ int reg_cnt;
 	"pushq\t%%r14\n"\
 	"pushq\t%%r15\n"\
 	);\
+	*reg_stack_save = reg_ptr;\
+	reg_stack_save++;\
 }
 
 #define STACK_LOAD {\
@@ -58,6 +63,8 @@ int reg_cnt;
 	"popq\t%%rcx\n"\
 	"popq\t%%rax\n"\
 	);\
+	reg_stack_save--;\
+	reg_ptr = *reg_stack_save;\
 }
 
 int gen_label(t)
@@ -403,6 +410,10 @@ char *name;
 
 	reg_ptr = reg_stack;
 	reg_cnt = 13;
+
+	reg_stack_save = stack_reg;
+	fprintf(stderr, "%p\n", reg_stack_save);
+
 
 	fprintf(stdout, "\n.globl %s\n", name);
 	fprintf(stdout, ".type %s, @function\n%s:\n", name, name);
