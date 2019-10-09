@@ -177,14 +177,24 @@ ptree *t;
 
 		if (!strcmp(t->l->attr.nval->name, "write")) {
 			GEN_EXPR(t->r);
-			fprintf(stdout, "mov %s, %%rsi\n", *reg_ptr);
-			fprintf(stdout, "leaq int_print(%%rip), %%rdi\n");
-			fprintf(stdout, "mov $0, %%rax\n");
+			fprintf(stdout, "movq %s, %%rsi\n", *reg_ptr);
+			fprintf(stdout, "leaq int_print(%%rip),"
+					"%%rdi\n");
+			fprintf(stdout, "movq $0, %%rax\n");
 			fprintf(stdout, "call printf\n");
+			break;
 		} else if (!strcmp(t->l->attr.nval->name, "read")) {
 			fprintf(stderr,"Read\n");
+			break;
 		}
-		fprintf(stderr, "PCALL\n");
+
+		fprintf(stdout, "subq $%d, %%rsp\n", 
+				t->l->attr.nval->func_info->argc * OFFSET_SIZE);
+		gen_arguments(t->r);
+
+		fprintf(stdout, "call\t%s\n", t->l->attr.nval->name);
+
+
 		break;
 	case FCALL:
 		if (t->l->ret_type == INT) {
