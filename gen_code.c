@@ -135,6 +135,21 @@ ptree *t;
 
 }
 
+void gen_arguments(t)
+ptree *t;
+{
+	if (t->type != LIST){
+		GEN_EXPR(t)
+		fprintf(stdout, "pushq\t%s", *reg_ptr);
+
+		fprintf(stdout, "\n##ARGUMENT BOUNDARY\n");
+		return;
+	}
+
+	gen_arguments(t->r);
+	gen_arguments(t->l);
+}
+
 void gen_statement(t)
 ptree *t;
 {
