@@ -66,14 +66,14 @@ ptree *t;
 	if ((!t->r) && (!t->l) && t->label == 0){
 		switch (t->type) {
 		case ID:
-			fprintf(stdout, "mov\t%d(%%rbp), %s\n",
+			fprintf(stdout, "movq\t%d(%%rbp), %s\n",
 					- t->attr.nval->offset * OFFSET_SIZE, *reg_ptr);
 			break;
 		case INUM:
-			fprintf(stdout, "mov\t$%d, %s\n",t->attr.ival, *reg_ptr);
+			fprintf(stdout, "movq\t$%d, %s\n",t->attr.ival, *reg_ptr);
 			break;
 		default:
-			fprintf(stdout, "mov OTHER");
+			fprintf(stdout, "movq OTHER");
 		}
 	}
 	/*case 0
@@ -82,13 +82,13 @@ ptree *t;
 		/*TODO check if correct*/
 		switch (t->type) {
 		case ID:
-			fprintf(stdout, "mov\t%s, %s\n",t->attr.nval->name, *reg_ptr);
+			fprintf(stdout, "movq\t%s, %s\n",t->attr.nval->name, *reg_ptr);
 			break;
 		case INUM:
-			fprintf(stdout, "mov\t$%d, %s\n",t->attr.ival, *reg_ptr);
+			fprintf(stdout, "movq\t$%d, %s\n",t->attr.ival, *reg_ptr);
 			break;
 		default:
-			fprintf(stdout, "mov OTHER");
+			fprintf(stdout, "movq OTHER");
 		}
 	}
 	/*case 1
@@ -149,7 +149,7 @@ ptree *t;
 			gen_label(t->r);
 			print_tree(t);
 			GEN_EXPR(t->r);
-			fprintf(stdout, "mov %s, %d(%%rbp)\n", *reg_ptr,
+			fprintf(stdout, "movq %s, %d(%%rbp)\n", *reg_ptr,
 					- t->l->attr.nval->offset * OFFSET_SIZE);
 		} else {
 			yyerror(FLOAT_ERROR);

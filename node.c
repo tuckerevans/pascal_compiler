@@ -20,6 +20,8 @@ char *str;
 	p->func_info = NULL;
 	p->array_info = NULL;
 
+	p->offset = 0;
+
 	return p;
 }
 

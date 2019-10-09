@@ -29,6 +29,7 @@ ptree* mkinum(int);
 ptree* mkrnum(float);
 ptree* mkop(int, int, ptree*, ptree*);
 
+int update_offsets(ptree*, int);
 void update_type_info(ptree*, ptree*);
 void set_ret_type(ptree*);
 
