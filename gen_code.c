@@ -19,7 +19,7 @@ scope *cur_scope;
 	else yyerror("CAN'T POP");}
 #define REG_PUSH {if (reg_cnt < 13) reg_ptr--, reg_cnt++;\
 		else yyerror("CAN'T PUSH");}
-#define GEN_EXPR(x) {gen_label(x); gen_expr(x);}
+#define GEN_EXPR(x) {(x)->label = gen_label(x); gen_expr(x);}
 
 char **reg_stack, **reg_ptr;
 int reg_cnt;
@@ -65,7 +65,7 @@ ptree *t;
 {
 	int tmp;
 
-	if (!(t->l && t->r)) {
+	if (!(t->l || t->r)) {
 		t->label = 0;
 		return 0;
 	}
@@ -77,16 +77,18 @@ ptree *t;
 		yyerror("GEN_LABEL: left child NULL, shouldn't happen!\n");
 
 	if (t->r)
-		t->r->label = gen_label(t->r);
+		tmp = t->r->label = gen_label(t->r);
 	else
-		t->r->label = 0;
+		tmp = 0;
 
 
-	if (t->r->label == t->l->label) {
+
+	if (tmp == t->l->label) {
 		return 1 + t->l->label;
 	} else {
-		return t->r->label > t->l->label ? t->r->label : t->l->label;
+		return tmp > t->l->label ? tmp : t->l->label;
 	}
+}
 
 }
 
