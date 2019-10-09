@@ -185,13 +185,13 @@ char *name;
 {
 	reg_stack = malloc(13 * sizeof(char*));
 	assert(reg_stack);
-	reg_stack[0] = "RAX";  reg_stack[1] = "RCX";
-	reg_stack[2] = "RDX";  reg_stack[3] = "RSI";
-	reg_stack[4] = "RDI";  reg_stack[5] = "R8";
-	reg_stack[6] = "R9";   reg_stack[7] = "R10";
-	reg_stack[8] = "R11";  reg_stack[9] = "R12";
-	reg_stack[10] = "R13"; reg_stack[11] = "R14";
-	reg_stack[12] = "R15";
+	reg_stack[0] = "%rax";  reg_stack[1] = "%rcx";
+	reg_stack[2] = "%rdx";  reg_stack[3] = "%rsi";
+	reg_stack[4] = "%rdi";  reg_stack[5] = "r8";
+	reg_stack[6] = "r9";   reg_stack[7] = "%r10";
+	reg_stack[8] = "%r11";  reg_stack[9] = "%r12";
+	reg_stack[10] = "%r13"; reg_stack[11] = "%r14";
+	reg_stack[12] = "%r15";
 
 	reg_ptr = reg_stack;
 	reg_cnt = 13;
