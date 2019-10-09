@@ -247,7 +247,8 @@ sub_prog_head
 			tmp->var_type = $5;
 		}
 
-		update_offsets($3, -1);
+		update_offsets($3, -2);
+		cur_scope->offset -= i;
 		free_tree($3);
 
 
@@ -277,7 +278,8 @@ sub_prog_head
 
 		assert(!set_func_types($3, tmp->func_info->argv, i));
 
-		update_offsets($3, -1);
+		update_offsets($3, -2);
+		cur_scope->offset -= i;
 		free_tree($3);
 
 		$$ = mktree(PROC, mkid(tmp), NULL);
@@ -287,7 +289,6 @@ sub_prog_head
 arguments
 	:'(' param_list ')'
 	{
-		cur_scope->offset -= count_args($2);
 		$$ = $2;
 	}
 	|/*empty*/{
