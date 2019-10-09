@@ -12,7 +12,8 @@ program main ( input, output );
 	var test:integer;
 	begin
 		test := 2;
-		a := 2
+		a := 2;
+		bar := 2.1
 	end;
 	procedure foo;
 	begin
@@ -23,11 +24,14 @@ program main ( input, output );
 	end;
 	function order (a, b, c: integer) : real;
 	begin
-		a := 2
+		a := 2;
+		order := 2.1
+
 	end;
-	function order2 (a, b, c, d, e: integer) : real;
+	function order2 (a, b, c, d, e: integer; f, g, h, i,j :real) : real;
 	begin
-		a := 2
+		a := 2;
+		order2 := 2.1
 	end;
 begin
 { TEST }
@@ -35,7 +39,7 @@ begin
 	a := 1;
         x := 3.14;
 	x := order(a, b, c);
-	x := order2(a, b, c, d, e);
+	x := order2(a, b, c, d, e, 1.0, 1.0, 1.0, 1.0, 1.0);
 	x := bar(a);
 	foo;
 	boo(a);
