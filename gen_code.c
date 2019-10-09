@@ -222,10 +222,8 @@ ptree *t;
 	switch (t->type){
 	case ASSIGNOP:
 		if (t->l->ret_type == INT) {
-			gen_label(t->r);
-			print_tree(t);
 			GEN_EXPR(t->r);
-			fprintf(stdout, "movq %s, %d(%%rbp)\n", *reg_ptr,
+			fprintf(stdout, "movq\t%s, %d(%%rbp)\n", *reg_ptr,
 					- t->l->attr.nval->offset * OFFSET_SIZE);
 		} else {
 			yyerror(FLOAT_ERROR);
