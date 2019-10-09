@@ -24,10 +24,10 @@ scope.o: scope.c headers
 node.o: node.c headers
 	$(CC) $(FLAGS) -c node.c
 
-y.tab.o: y.tab.c
+y.tab.o: y.tab.c headers
 	$(CC) $(FLAGS) -c y.tab.c
 
-lex.yy.o: lex.yy.c
+lex.yy.o: lex.yy.c headers
 	$(CC) $(FLAGS) -c lex.yy.c
 
 y.tab.c: pc.y
