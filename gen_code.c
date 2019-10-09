@@ -215,7 +215,7 @@ ptree *t;
 {
 	if (t->type != LIST){
 		gen_statement(t);
-		fprintf(stdout, "\n;;STATEMENT BOUNDARY\n");
+		fprintf(stdout, "\n##STATEMENT BOUNDARY\n");
 		return;
 	}
 
