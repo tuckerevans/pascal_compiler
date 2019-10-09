@@ -24,6 +24,42 @@ scope *cur_scope;
 char **reg_stack, **reg_ptr;
 int reg_cnt;
 
+#define STACK_SAVE {\
+	fprintf(stdout,
+	"pushq\t%rax\n"\
+	"pushq\t%rcx\n"\
+	"pushq\t%rdx\n"\
+	"pushq\t%rsi\n"\
+	"pushq\t%rdi\n"\
+	"pushq\tr8\n"  \
+	"pushq\tr9\n"  \
+	"pushq\t%r10\n"\
+	"pushq\t%r11\n"\
+	"pushq\t%r12\n"\
+	"pushq\t%r13\n"\
+	"pushq\t%r14\n"\
+	"pushq\t%r15\n"\
+	)\
+}
+
+#define STACK_LOAD {\
+	fprintf(stdout,
+	"popq\t%r15\n"\
+	"popq\t%r14\n"\
+	"popq\t%r13\n"\
+	"popq\t%r12\n"\
+	"popq\t%r11\n"\
+	"popq\t%r10\n"\
+	"popq\tr9\n"  \
+	"popq\tr8\n"  \
+	"popq\t%rdi\n"\
+	"popq\t%rsi\n"\
+	"popq\t%rdx\n"\
+	"popq\t%rcx\n"\
+	"popq\t%rax\n"\
+	)\
+}
+
 int gen_label(t)
 ptree *t;
 {
@@ -178,21 +214,25 @@ ptree *t;
 		if (!strcmp(t->l->attr.nval->name, "write")) {
 			GEN_EXPR(t->r);
 			fprintf(stdout, "movq %s, %%rsi\n", *reg_ptr);
+			STACK_SAVE
 			fprintf(stdout, "leaq int_print(%%rip),"
 					"%%rdi\n");
 			fprintf(stdout, "movq $0, %%rax\n");
 			fprintf(stdout, "call printf\n");
+			STACK_LOAD
 			break;
 		} else if (!strcmp(t->l->attr.nval->name, "read")) {
 			fprintf(stderr,"Read\n");
 			break;
 		}
 
+		STACK_SAVE
 		fprintf(stdout, "subq $%d, %%rsp\n", 
 				t->l->attr.nval->func_info->argc * OFFSET_SIZE);
 		gen_arguments(t->r);
 
 		fprintf(stdout, "call\t%s\n", t->l->attr.nval->name);
+		STACK_LOAD
 
 
 		break;
