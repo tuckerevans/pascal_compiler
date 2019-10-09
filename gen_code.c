@@ -225,23 +225,29 @@ ptree *t;
 		default:
 			fprintf(stdout, "movq OTHER");
 		}
+}
+
+
+/*Based on Dragon Book gen_code()*/
+void gen_expr(t)
+ptree *t;
+{
+	if (!t) {
+		fprintf(stderr, "GEN_EXPR: NOT T\n");
+		return;
+	}
+
+
+
+	if (t->label == 0 || (t->type == FCALL || t->type == PCALL)
+			|| t->type == SUB){
+		gen_load(t);
 	}
 	/*case 0
 	 * t is a left leaf*/
 	else if ((!t->r) && (!t->l) && t->label != 0) {
 		/*TODO check if correct*/
-		switch (t->type) {
-		case ID:
-			fprintf(stdout, "movq\t%s, %s\n",t->attr.nval->name, *reg_ptr);
-			break;
-		case INUM:
-			fprintf(stdout, "movq\t$%d, %s\n",t->attr.ival, *reg_ptr);
-			break;
-		case FCALL:
-			break;
-		default:
-			fprintf(stdout, "movq OTHER");
-		}
+		gen_load(t);
 	}
 	/*case 1
 	 * t has a right child with label 0*/
@@ -251,7 +257,7 @@ ptree *t;
 			yyerror(FLOAT_ERROR);
 		}
 
-		gen_op(t);
+		gen_op(t,1);
 	}
 	/*case 2
 	 * 1 <= t->l->label < t->r->label AND t->l->lable < reg_cnt*/
@@ -260,7 +266,7 @@ ptree *t;
 			&& t->l->label < reg_cnt) {
 
 		REG_SWAP
-		GEN_EXPR(t->l);
+		GEN_EXPR(t->l); /*REG S = reg_ptr - 1*/
 		REG_POP
 		GEN_EXPR(t->r);
 		gen_op(t);
@@ -342,9 +348,7 @@ ptree *t;
 		yyerror("Issue with statement code generation\n");
 		break;
 	case IF:
-		if (t->l->l->ret_type == INT) {
-			fprintf(stderr, "IF (INT)\n");
-		} else {
+		if (t->l->l->ret_type == REAL) {
 			fprintf(stderr, "IF (REAL)\n");
 			yyerror(FLOAT_ERROR);
 		}
