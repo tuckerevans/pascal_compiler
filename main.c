@@ -173,6 +173,18 @@ int size, *nxt;
 
 		*nxt = t->attr.nval->var_type;
 		return size;
+	} else if (t->type == INUM) {
+		if (--size == -1)
+			yyerror("VARIABLE COUNT CHANGED!!!\n");
+
+		*nxt = INT;
+		return size;
+	} else if (t->type == RNUM) {
+		if (--size == -1)
+			yyerror("VARIABLE COUNT CHANGED!!!\n");
+
+		*nxt = REAL;
+		return size;
 	}
 	return size;
 }
