@@ -24,8 +24,10 @@ ptree *t;
 {
 	int tmp;
 
-	if (!(t->l && t->r))
+	if (!(t->l && t->r)) {
+		t->label = 0;
 		return 0;
+	}
 
 	if (t->l) {
 		tmp = gen_label(t->l);
@@ -56,9 +58,23 @@ ptree *t;
 		return;
 	}
 
+	if ((!t->r) && (!t->l) && t->label == 0){
+		switch (t->type) {
+		case ID:
+			fprintf(stdout, "mov\t%d(%%rbp), %s\n",
+					- t->attr.nval->offset * OFFSET_SIZE, *reg_ptr);
+			break;
+		case INUM:
+			fprintf(stdout, "mov\t$%d, %s\n",t->attr.ival, *reg_ptr);
+			break;
+		default:
+			fprintf(stdout, "mov OTHER");
+		}
+	}
 	/*case 0
 	 * t is a left leaf*/
-	if ((!t->r) && (!t->l) && t->label != 0) {
+	else if ((!t->r) && (!t->l) && t->label != 0) {
+		/*TODO check if correct*/
 		switch (t->type) {
 		case ID:
 			fprintf(stdout, "mov\t%s, %s\n",t->attr.nval->name, *reg_ptr);
