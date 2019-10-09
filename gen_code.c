@@ -210,5 +210,10 @@ char *name;
 	fprintf(stdout, "\n.globl %s\n", name);
 	fprintf(stdout, ".type %s, @function\n%s:\n", name, name);
 
+	fprintf(stdout, "pushq\t%%rbp\nmovq\t%%rsp, %%rbp\n");
+	fprintf(stdout, "subq\t $%d, %%rsp\n", cur_scope->offset * OFFSET_SIZE);
 	gen_statement_order(t);
+
+	fprintf(stdout, "movq\t%%rbp, %%rsp\npop\t%%rbp\nret\n\n");
+
 }
