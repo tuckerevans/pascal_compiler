@@ -25,39 +25,39 @@ char **reg_stack, **reg_ptr;
 int reg_cnt;
 
 #define STACK_SAVE {\
-	fprintf(stdout,
-	"pushq\t%rax\n"\
-	"pushq\t%rcx\n"\
-	"pushq\t%rdx\n"\
-	"pushq\t%rsi\n"\
-	"pushq\t%rdi\n"\
-	"pushq\tr8\n"  \
-	"pushq\tr9\n"  \
-	"pushq\t%r10\n"\
-	"pushq\t%r11\n"\
-	"pushq\t%r12\n"\
-	"pushq\t%r13\n"\
-	"pushq\t%r14\n"\
-	"pushq\t%r15\n"\
-	)\
+	fprintf(stdout, \
+	"pushq\t%%rax\n"\
+	"pushq\t%%rcx\n"\
+	"pushq\t%%rdx\n"\
+	"pushq\t%%rsi\n"\
+	"pushq\t%%rdi\n"\
+	"pushq\t%%r8\n"  \
+	"pushq\t%%r9\n"  \
+	"pushq\t%%r10\n"\
+	"pushq\t%%r11\n"\
+	"pushq\t%%r12\n"\
+	"pushq\t%%r13\n"\
+	"pushq\t%%r14\n"\
+	"pushq\t%%r15\n"\
+	);\
 }
 
 #define STACK_LOAD {\
-	fprintf(stdout,
-	"popq\t%r15\n"\
-	"popq\t%r14\n"\
-	"popq\t%r13\n"\
-	"popq\t%r12\n"\
-	"popq\t%r11\n"\
-	"popq\t%r10\n"\
-	"popq\tr9\n"  \
-	"popq\tr8\n"  \
-	"popq\t%rdi\n"\
-	"popq\t%rsi\n"\
-	"popq\t%rdx\n"\
-	"popq\t%rcx\n"\
-	"popq\t%rax\n"\
-	)\
+	fprintf(stdout,\
+	"popq\t%%r15\n"\
+	"popq\t%%r14\n"\
+	"popq\t%%r13\n"\
+	"popq\t%%r12\n"\
+	"popq\t%%r11\n"\
+	"popq\t%%r10\n"\
+	"popq\t%%r9\n"  \
+	"popq\t%%r8\n"  \
+	"popq\t%%rdi\n"\
+	"popq\t%%rsi\n"\
+	"popq\t%%rdx\n"\
+	"popq\t%%rcx\n"\
+	"popq\t%%rax\n"\
+	);\
 }
 
 int gen_label(t)
