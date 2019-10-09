@@ -6,6 +6,8 @@
 #include "pc.h"
 #include "scope.h"
 
+#define FLOAT_ERROR "Cannot produce code with reals\n"
+
 scope *cur_scope;
 
 #define REG_SWAP {\
@@ -96,6 +98,8 @@ ptree *t;
 		if (t->r && t->r->type == INT) {
 			fprintf(stdout, "op\t$%d,\n", t->r->attr.ival);
 			fprintf(stdout, "op\t$%d,%s\n", t->r->attr.ival, *reg_ptr);
+		} else {
+			yyerror(FLOAT_ERROR);
 		}
 	}
 	/*case 2
@@ -148,10 +152,14 @@ ptree *t;
 			fprintf(stdout, "mov %s, %d(%%rbp)\n", *reg_ptr,
 					- t->l->attr.nval->offset * OFFSET_SIZE);
 		} else {
+			yyerror(FLOAT_ERROR);
 			fprintf(stderr, "ASSIGN (REAL) %s\n", t->l->attr.nval->name);
 		}
 		break;
 	case PCALL:
+		if (t->r->ret_type == REAL)
+				yyerror(FLOAT_ERROR);
+
 		if (!strcmp(t->l->attr.nval->name, "write")) {
 			GEN_EXPR(t->r);
 			fprintf(stdout, "mov %s, %%rsi\n", *reg_ptr);
@@ -168,6 +176,7 @@ ptree *t;
 			fprintf(stderr, "FCALL (INT) %s\n", t->l->attr.nval->name);
 		} else {
 			fprintf(stderr, "FCALL (REAL) %s\n", t->l->attr.nval->name);
+			yyerror(FLOAT_ERROR);
 		}
 		break;
 	case LIST:
@@ -178,6 +187,7 @@ ptree *t;
 			fprintf(stderr, "IF (INT)\n");
 		} else {
 			fprintf(stderr, "IF (REAL)\n");
+			yyerror(FLOAT_ERROR);
 		}
 
 		break;
@@ -186,6 +196,7 @@ ptree *t;
 			fprintf(stderr, "WHILE (INT)\n");
 		} else {
 			fprintf(stderr, "WHILE (REAL)\n");
+			yyerror(FLOAT_ERROR);
 		}
 
 		break;
