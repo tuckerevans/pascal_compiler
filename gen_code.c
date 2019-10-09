@@ -4,6 +4,9 @@
 #include <string.h>
 #include "gen_code.h"
 #include "pc.h"
+#include "scope.h"
+
+scope *cur_scope;
 
 #define REG_SWAP {\
 	char *tmp_reg_swap = *reg_ptr;\
@@ -139,8 +142,11 @@ ptree *t;
 	switch (t->type){
 	case ASSIGNOP:
 		if (t->l->ret_type == INT) {
+			gen_label(t->r);
+			print_tree(t);
 			GEN_EXPR(t->r);
-			fprintf(stdout, "mov %s, ADDR\n", *reg_ptr);
+			fprintf(stdout, "mov %s, %d(%%rbp)\n", *reg_ptr,
+					- t->l->attr.nval->offset * OFFSET_SIZE);
 		} else {
 			fprintf(stderr, "ASSIGN (REAL) %s\n", t->l->attr.nval->name);
 		}
