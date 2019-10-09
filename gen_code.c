@@ -117,7 +117,8 @@ ptree *t;
 		return;
 	}
 
-	if ((!t->r) && (!t->l) && t->label == 0){
+
+	if (t->label == 0){
 		switch (t->type) {
 		case ID:
 			fprintf(stdout, "movq\t%d(%%rbp), %s\n",
@@ -125,6 +126,22 @@ ptree *t;
 			break;
 		case INUM:
 			fprintf(stdout, "movq\t$%d, %s\n",t->attr.ival, *reg_ptr);
+			break;
+		case FCALL:
+			STACK_SAVE
+			fprintf(stdout, "subq $%d, %%rsp\n",
+					t->l->attr.nval->func_info->argc
+						* OFFSET_SIZE);
+			gen_arguments(t->r);
+
+			fprintf(stdout, "call\t%s\n", t->l->attr.nval->name);
+			fprintf(stdout, "movq\t%s,%d(%%rbp)\n",
+					*reg_ptr,
+					- t->l->attr.nval->offset * OFFSET_SIZE);
+			STACK_LOAD
+			fprintf(stdout, "movq\t%d(%%rbp),%s\n",
+					- t->l->attr.nval->offset * OFFSET_SIZE,
+					*reg_ptr);
 			break;
 		default:
 			fprintf(stdout, "movq OTHER");
@@ -235,7 +252,7 @@ ptree *t;
 		}
 
 		STACK_SAVE
-		fprintf(stdout, "subq $%d, %%rsp\n", 
+		fprintf(stdout, "subq $%d, %%rsp\n",
 				t->l->attr.nval->func_info->argc * OFFSET_SIZE);
 		gen_arguments(t->r);
 
@@ -243,14 +260,6 @@ ptree *t;
 		STACK_LOAD
 
 
-		break;
-	case FCALL:
-		if (t->l->ret_type == INT) {
-			fprintf(stderr, "FCALL (INT) %s\n", t->l->attr.nval->name);
-		} else {
-			fprintf(stderr, "FCALL (REAL) %s\n", t->l->attr.nval->name);
-			yyerror(FLOAT_ERROR);
-		}
 		break;
 	case LIST:
 		yyerror("Issue with statement code generation\n");
@@ -305,8 +314,8 @@ char *name;
 	assert(reg_stack);
 	reg_stack[0] = "%rax";  reg_stack[1] = "%rcx";
 	reg_stack[2] = "%rdx";  reg_stack[3] = "%rsi";
-	reg_stack[4] = "%rdi";  reg_stack[5] = "r8";
-	reg_stack[6] = "r9";   reg_stack[7] = "%r10";
+	reg_stack[4] = "%rdi";  reg_stack[5] = "%r8";
+	reg_stack[6] = "%r9";   reg_stack[7] = "%r10";
 	reg_stack[8] = "%r11";  reg_stack[9] = "%r12";
 	reg_stack[10] = "%r13"; reg_stack[11] = "%r14";
 	reg_stack[12] = "%r15";
