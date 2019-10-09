@@ -191,18 +191,9 @@ ptree *t;
 	gen_arguments(t->l);
 }
 
-
-/*Based on Dragon Book gen_code()*/
-void gen_expr(t)
+void gen_load(t)
 ptree *t;
 {
-	if (!t) {
-		fprintf(stderr, "GEN_EXPR: NOT T\n");
-		return;
-	}
-
-
-	if (t->label == 0){
 		switch (t->type) {
 		case ID:
 			fprintf(stdout, "movq\t%d(%%rbp), %s\n",
@@ -226,6 +217,10 @@ ptree *t;
 			fprintf(stdout, "movq\t%d(%%rbp),%s\n",
 					- t->l->attr.nval->offset * OFFSET_SIZE,
 					*reg_ptr);
+			break;
+		case SUB:
+			gen_load(t->l);
+			fprintf(stdout, "negq\t%s\n", *reg_ptr);
 			break;
 		default:
 			fprintf(stdout, "movq OTHER");
