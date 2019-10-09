@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 #include "gen_code.h"
 #include "pc.h"
 
@@ -128,6 +129,15 @@ ptree *t;
 		}
 		break;
 	case PCALL:
+		if (!strcmp(t->l->attr.nval->name, "write")) {
+			GEN_EXPR(t->r);
+			fprintf(stdout, "mov %s, %%rsi\n", *reg_ptr);
+			fprintf(stdout, "leaq int_print(%%rip), %%rdi\n");
+			fprintf(stdout, "mov $0, %%rax\n");
+			fprintf(stdout, "call printf\n");
+		} else if (!strcmp(t->l->attr.nval->name, "read")) {
+			fprintf(stderr,"Read\n");
+		}
 		fprintf(stderr, "PCALL\n");
 		break;
 	case FCALL:
