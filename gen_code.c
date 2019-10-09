@@ -90,6 +90,88 @@ ptree *t;
 	}
 }
 
+void gen_op(t, c)
+ptree *t;
+int c;
+{
+	if (!t)
+		yyerror("Not an tree (gen_op)\n");
+	print_tree(t);
+
+	switch (t->type) {
+	case ADDOP:
+	case MULOP:
+		switch (t->attr.opval) {
+		case ADD:
+			fprintf(stdout, "addq\t");
+			if (c == 1)
+				goto case1;
+			goto case23;
+			break;
+		case SUB:
+			fprintf(stdout, "subq\t");
+			if (c == 1)
+				goto case1;
+			goto case23;
+			break;
+		case MUL:
+			fprintf(stdout, "imulq\t");
+			break;
+		case DIV:
+			fprintf(stdout, "idivq\t");
+			break;
+		default:
+			fprintf(stderr, "OPVAL: %d\n", t->attr.opval);
+		}
+		break;
+	case SUB:
+		print_tree(t);
+		gen_load(t->l);
+		fprintf(stdout, "negq\t%s", *reg_ptr);
+		break;
+	case RELOP:
+		break;
+	default:
+		fprintf(stderr, "%d\n", t->type);
+		yyerror("Not an op\n");
+	}
+	return;
+case1:
+	/*Taken/addapted from gen_load*/
+	switch (t->r->type) {
+	case ID:
+		fprintf(stdout, "%d(%%rbp), %s\n",
+				- t->r->attr.nval->offset * OFFSET_SIZE, *reg_ptr);
+		break;
+	case INUM:
+		fprintf(stdout, "$%d, %s\n",t->r->attr.ival, *reg_ptr);
+		break;
+	case FCALL:
+		STACK_SAVE
+		fprintf(stdout, "subq $%d, %%rsp\n",
+				t->r->l->attr.nval->func_info->argc
+					* OFFSET_SIZE);
+		gen_arguments(t->r->r);
+
+		fprintf(stdout, "call\t%s\n", t->r->l->attr.nval->name);
+		fprintf(stdout, "movq\t%s,%d(%%rbp)\n",
+				*reg_ptr,
+				- t->r->l->attr.nval->offset * OFFSET_SIZE);
+		STACK_LOAD
+		fprintf(stdout, "%d(%%rbp),%s\n",
+				- t->r->l->attr.nval->offset * OFFSET_SIZE,
+				*reg_ptr);
+		break;
+	default:
+		fprintf(stdout, "movq OTHER\n");
+	}
+	return;
+case23:
+	fprintf(stdout, "%s, %s\n", *reg_ptr, *(reg_ptr - 1));
+	return;
+case4:
+	/*Case 4 not implemented*/
+	return;
 }
 
 void gen_expr(ptree*);
