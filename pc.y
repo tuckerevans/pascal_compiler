@@ -193,7 +193,7 @@ sub_prog_declaration
 		char *name = $1->l->attr.nval->name;
 		$1->l->attr.nval = NULL;
 
-		if ($1->type == FCALL)
+		if ($1->type == FUNC)
 			check_func_return($4, name);
 
 		free_tree($1);
@@ -249,7 +249,7 @@ sub_prog_head
 		cur_scope->ret_var = mknode($2);
 		cur_scope->ret_var->var_type = $5;
 
-		$$ = mktree(FCALL, mkid(tmp), NULL);
+		$$ = mktree(FUNC, mkid(tmp), NULL);
 
 	}
 	|PROC ID arguments ';'
@@ -272,7 +272,7 @@ sub_prog_head
 		assert(!set_func_types($3, tmp->func_info->argv, i));
 		free_tree($3);
 
-		$$ = mktree(PCALL, mkid(tmp), NULL);
+		$$ = mktree(PROC, mkid(tmp), NULL);
 	}
 ;
 
