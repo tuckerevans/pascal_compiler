@@ -127,9 +127,13 @@ ptree *t;
 			break;
 		}
 
-		type = t->l->attr.nval -> var_type;
+		type = t->l->attr.nval->var_type;
 		if (type == ARRAY - INT || type == ARRAY - REAL)
 			return ARRAY - type;
+
+		snprintf(buf, 100, "%s is not an array (has type: %s)\n",
+				t->l->attr.nval->name,
+				pretty_type(type));
 		break;
 	case IF:
 	case WHILE:
