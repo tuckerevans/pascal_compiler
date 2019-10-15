@@ -43,9 +43,11 @@ output {
 	tmp->func_info->argc = -1;
 	tmp->func_info->argv = NULL;
 
+#ifdef GENERATE_CODE
 	fprintf(stdout, ".data\n");
 	fprintf(stdout, "int_print:\n\t .asciz \"%%d\\n\"\n");
 	fprintf(stdout, "float_print:\n\t .asciz \"%%f\\n\"\n.text\n");
+#endif
 
 
 	return IO;
