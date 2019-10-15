@@ -378,10 +378,6 @@ statement
 
 		$$ = mktree(FOR, tmp, $8);
 	}
-	| expr
-	{
-		$$ = $1;
-	}
 ;
 ifelse
 	:IF expr THEN statement
@@ -444,15 +440,6 @@ proc_statement
 
 		tmp = check_exists(cur_scope, $1);
 		$$ = mktree(PCALL, mkid(tmp), $3);
-
-		free($1);
-	}
-	|ID '(' ')'
-	{
-		node *tmp;
-
-		tmp = check_exists(cur_scope, $1);
-		$$ = mktree(PCALL, mkid(tmp), NULL);
 
 		free($1);
 	}
@@ -527,16 +514,6 @@ factor
 
 		tmp = check_exists(cur_scope, $1);
 		$$ = mktree(FCALL, mkid(tmp), $3);
-		check_call($$);
-
-		free($1);
-	}
-	| ID '(' ')'
-	{
-		node *tmp;
-
-		tmp = check_exists(cur_scope, $1);
-		$$ = mktree(FCALL, mkid(tmp), NULL);
 		check_call($$);
 
 		free($1);
