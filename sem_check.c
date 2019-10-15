@@ -8,6 +8,8 @@
 #include "y.tab.h"
 #include "pc.h"
 
+extern scope *cur_scope;
+
 void check_id(s, n)
 scope *s;
 char *n;
@@ -27,7 +29,7 @@ char *n;
 	node *tmp;
 	char buf[100];
 
-	if(!(tmp = scope_safe_search(s,n))) {
+	if(!(tmp = scope_search_all(s,n))) {
 		snprintf(buf, 100, "Cannot find \"%s\"\n", n);
 		yyerror(buf);
 	}
@@ -40,6 +42,7 @@ ptree *t;
 {
 	char buf[100];
 	int type;
+	ptree *tmp;
 
 	if (!t)
 		fprintf(stderr, "TYPE: %d\n", t->type);
@@ -106,9 +109,18 @@ ptree *t;
 		if (!(t->r && t->l))
 			yyerror("Incomplete parse tree\n");
 
-		if (t->l->ret_type == t->r->ret_type)
-			return 1;
-		else
+		if (t->l->ret_type == t->r->ret_type){
+			tmp = t->l->type == ARRAY_ACCESS ? t->l->l : t->l;
+			snprintf(buf, 100, "WHERES THE ERROR\n");
+			if(!(scope_safe_search(cur_scope,
+						tmp->attr.nval->name))) {
+				snprintf(buf, 100, "Cannot find \"%s\"\n",
+						tmp->attr.nval->name);
+				break;
+			} else {
+				return 1;
+			}
+		} else
 			snprintf(buf, 100, "Mismached types: "
 					"Cannot assign type %s "
 					"to variable \"%s\" of type %s\n",
