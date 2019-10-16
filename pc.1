@@ -1,0 +1,23 @@
+.TH PC 1 "2019 October 17" "PC 0.1.1" "PC Manual"
+.SH NAME
+pc - Pascal Compiler
+
+.SH SYNOPSIS
+.nf
+\fBpc\fP [options]
+.fi
+
+.SH DESCRIPTION
+PC parses and (starts to) compile a subset of pascal into X86-64
+assembly. PC accepts a source file via stdin and will output to
+stdout (as long as the binary was compiled with the GENERATE_CODE
+macro). Errors are reported on stderr; If the binary was compiled
+with the macro DEBUG then parse trees and scopes are printed to stderr
+as well.
+
+.SH OPTIONS
+.PP
+PC currently accepts no options.
+
+.SH AUTHOR
+Tucker Evans

@@ -57,4 +57,5 @@ tar:  headers pc.y pc.l tree.c scope.c node.c pc.c sem_check.c gen_code.c
 	pascal_compiler/tree.h      \
 	pascal_compiler/sem_check.c \
 	pascal_compiler/sem_check.h \
+	pascal_compiler/readme.txt  \
 	pascal_compiler/makefile
