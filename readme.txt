@@ -1,4 +1,4 @@
-PC Readme
+PC Report
 =========
 Tucker Evans
 October 16, 2019
@@ -30,12 +30,12 @@ limited to:
   - Assignment
   - Procedure calls
 
-Therefore the current ToDo list for code generation is:
+Therefore the current To Do list for code generation is:
 - Input via read() (emulating scanf c call)
 - If statements
 - While loops (statement)
 - For loops (statement)
 - Array Access
 
-Other ToDo's
+Other To Do's
 - Provide src/output files via flags.
