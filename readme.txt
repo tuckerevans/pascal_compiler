@@ -17,15 +17,15 @@ trees, and scope information will also be printed to stderr.
 Status
 ------
 PC has a working frontend and an incomplete backend . PC currently can tokenize,
-parse, and run semantic checks on source files. The code generation is currently
-limited to:
+parse, and run semantic checks on source files. The code generation only works
+with integer variables and is currently limited to:
 - Output (write() calls)
 - Expressions
   - Function calls
   - Addition/Subtraction
   - Multiplication/Division
   - Negation
-  - Variable access (Not Arrays)
+  - Variable access (No Arrays, No Reals)
 - Statements
   - Assignment
   - Procedure calls
@@ -36,6 +36,7 @@ Therefore the current To Do list for code generation is:
 - While loops (statement)
 - For loops (statement)
 - Array Access
+- Real variables
 
 Other To Do's
 - Provide src/output files via flags.
