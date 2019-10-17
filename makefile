@@ -3,8 +3,8 @@ FLAGS = -g -O0 -Wall -ggdb3 -Wno-parentheses
 YACC = yacc
 LEX = lex
 
-mypc: y.tab.o lex.yy.o tree.o scope.o node.o pc.o sem_check.o gen_code.o
-	$(CC) $(FLAGS) -o mypc main.o tree.o scope.o sem_check.o gen_code.o node.o y.tab.o lex.yy.o -lfl -ly
+pc: y.tab.o lex.yy.o tree.o scope.o node.o pc.o sem_check.o gen_code.o
+	$(CC) $(FLAGS) -o pc main.o tree.o scope.o sem_check.o gen_code.o node.o y.tab.o lex.yy.o -lfl -ly
 
 pc.o: main.c headers
 	$(CC) $(FLAGS) -c main.c
@@ -39,7 +39,7 @@ lex.yy.c: pc.l
 headers: pc.h tree.h sem_check.h scope.h node.h y.tab.c gen_code.h
 
 clean:
-	rm -f mypc *.o y.tab.* lex.yy.*
+	rm -f pc *.o y.tab.* lex.yy.*
 
 tar:  headers pc.y pc.l tree.c scope.c node.c pc.c sem_check.c gen_code.c
 	tar -czf evans_pc.tar.gz -C ../ \
